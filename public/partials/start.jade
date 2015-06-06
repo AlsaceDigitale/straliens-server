@@ -1,0 +1,14 @@
+nav
+    section.left SCORE {{user.score}}
+    section.right ENERGIE {{user.energy}}
+
+section
+    .columns.medium-12.large-8.large-offset-2
+        form
+            | Latitude :
+            input(type='number', step='any', ng-model='center.lat')
+            |         Longitude :
+            input(type='number', step='any', ng-model='center.lng')
+            |         Zoom :
+            input(type='number', step='any', ng-model='center.zoom')
+        leaflet(center='center')

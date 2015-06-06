@@ -1,0 +1,45 @@
+body
+    margin: 0
+    font-family: "Arial"
+.game
+    color: #24D14D
+    font-size: 1.8em
+
+    nav
+        z-index: 100
+        position: absolute
+        height: 2.8125rem
+        min-width: 100%
+        line-height: 2.8125rem
+        background: rgba(0,0,0,0.6)
+
+        > div
+            padding: 0 8px
+
+    map > div > div > div:nth-child(8)
+        top: 2*2.8125rem !important
+    map > div > div > div:nth-child(7),
+    map > div > div > div:nth-child(9),
+    map > div > div:nth-child(2) > div:nth-child(10),
+    map > div > div:nth-child(2) > div:nth-child(7) > div
+        top: 2.8125rem !important
+
+    map > div > div:nth-child(2) > div:nth-child(9)
+        margin: 1px 29px 10px 10px
+
+    footer
+        z-index: 100
+        position: absolute
+        bottom: 0
+        height: 2.8125rem
+        min-width: 100%
+        line-height: 2.8125rem
+        background: rgba(0,0,0,1)
+
+
+.left
+    float: left
+.right
+    float: right
+.center
+    text-align: center
