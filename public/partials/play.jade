@@ -1,0 +1,13 @@
+.game
+    nav.header
+        .left SCORE {{user.score}}
+        .right ENERGIE {{user.energy}}
+    section
+        div(map-lazy-load='http://maps.google.com/maps/api/js')
+            map(center='48.5803, 7.7536 ' zoom='15' max-zoom="20" min-zoom="15" map-type-id="SATELLITE")
+
+    footer
+        .wrapper
+            .left MSG
+            .right {{endTime}}
+            .center {{user.team | uppercase}}
