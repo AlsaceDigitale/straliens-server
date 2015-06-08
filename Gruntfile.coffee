@@ -6,7 +6,12 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-watch'
 
     grunt.initConfig
+        # COFFEE COMPILATION
+        coffee: compile:
+            options: join: true
+            files: 'web/build/js/app.js': ['web/coffee/**/*.coffee']
 
+        # SASS COMPILATION
         sass: compile:
             options: style: 'compressed'
             files: [
@@ -17,6 +22,7 @@ module.exports = (grunt) ->
                 ext: '.min.css'
             ]
 
+        # JADE COMPILATION
         jade: compile:
             options:
                 client: false
@@ -29,8 +35,14 @@ module.exports = (grunt) ->
                 ext: '.html'
             ]
 
+        # WATCH FILES AND COMPILE ON CHANGE
+        # Posix: `grunt watch &`
+        # Windows: `START /B grunt watch`
         watch:
             coffee:
+                files: ['web/coffee/**/*.coffee']
+                tasks: ['coffee']
+            jade:
                 files: ['web/jade/**/*.jade']
                 tasks: ['jade']
             sass:
@@ -40,7 +52,7 @@ module.exports = (grunt) ->
     # Basic tasks calling other tasks
     # -------------------------------
 
-    grunt.registerTask 'default', ['jade', 'sass']
+    grunt.registerTask 'default', ['jade', 'sass', 'coffee']
 
 
     # More complex tasks
