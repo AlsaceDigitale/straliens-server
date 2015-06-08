@@ -18,7 +18,7 @@
 
 ### Serve files over HTTP
 
-You can't just open the index.html in your browser *via* `file://`. A webserver is needed since the page loads scripts from other domains, which is impossible, due to increased CORS restrictions in local.
+You can't just open the index.html in your browser *via* `file://`. A webserver is needed since the page loads scripts from other domains, which is impossible in static browsing, due to increased CORS restrictions.
 
 Until we get a backend server, you could do this...
  - Install PHP CLI : `sudo apt-get install php5-cli`
