@@ -1,0 +1,24 @@
+{
+  "name": "straliens-server",
+  "version": "1.0.0",
+  "description": "Straliens Server",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlsaceDigitale/straliens-server.git"
+  },
+  "author": "",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/AlsaceDigitale/straliens-server/issues"
+  },
+  "homepage": "https://github.com/AlsaceDigitale/straliens-server",
+  "dependencies": {
+    "express": "^4.12.4"
+  },
+  "devDependencies": {}
+}
