@@ -1,8 +1,13 @@
 # modules
 app = do require 'express'
-
+db = require './models/db'
 # config
-networking = require './config/networking'
+net = require './config/networking'
+
+
+# DATABASE
+# --------
+do db.syncSchemas
 
 
 # EXPRESS BOOTSTRAP
@@ -10,7 +15,7 @@ networking = require './config/networking'
 api = require './api'
 app.use '/api', api
 
-app.listen networking.http.port
+app.listen net.http.port
 
 
 # SOCKET.IO BOOTSTRAP
