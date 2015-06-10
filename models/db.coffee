@@ -9,7 +9,7 @@ orm = new Sequelize net.sql.database, net.sql.username, net.sql.password
 
 syncSchemas = ->
     require './user'
-    orm.sync()
+    orm.sync logging: false
         .then -> console.log 'Database synced with schemas.'
 
 
