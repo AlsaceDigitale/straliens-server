@@ -9,7 +9,7 @@ User = db.orm.define 'User',
         type: Sequelize.INTEGER
         primaryKey: true
         autoIncrement: true
-    pseudo:
+    nickname:
         type: Sequelize.STRING 25
         allowNull: false
 

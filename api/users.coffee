@@ -1,6 +1,7 @@
 # modules
 express = require 'express'
 router = express.Router()
+User = require '../models/user'
 
 # ENDPOINTS
 # ---------
@@ -12,7 +13,16 @@ router.get '/', (req, res) ->
 
 # GET /api/users/:id
 router.get '/:id', (req, res) ->
-    res.json id: req.params.id
+    res.findOrFail User, req.params.id, (user) ->
+        res.json formatUser user
+
+
+# METHODS
+# -------
+
+formatUser = (user) ->
+    result = user
+    return result
 
 
 # export routing
