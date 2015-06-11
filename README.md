@@ -24,7 +24,7 @@ mysql> grant all privileges on straliens.* to straliens@localhost ;
 
 Optional : phpmyadmin to visualize/edit the database datas. Try it in three commands:
 ```
-sudo apt-get install php5 php5-cli php5-mysql
+sudo apt-get install php5-cli php5-mysql
 git clone https://github.com/phpmyadmin/phpmyadmin.git
 cd phpmyadmin; php -S localhost:8080
 ```
