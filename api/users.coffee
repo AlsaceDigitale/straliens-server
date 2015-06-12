@@ -1,6 +1,7 @@
 # modules
 express = require 'express'
 router = express.Router()
+db = require '../models/db'
 User = require '../models/user'
 
 # ENDPOINTS
@@ -8,13 +9,21 @@ User = require '../models/user'
 
 # GET /api/users
 router.get '/', (req, res) ->
-    res.json []
+    list = []
+    User.findAll().then (users) ->
+        list.push formatUser(user) for user in users
+        res.json list
 
 
 # GET /api/users/:id
 router.get '/:id', (req, res) ->
     res.findOrFail User, req.params.id, (user) ->
-        res.json formatUser user
+        res.json formatUser(user)
+
+# POST /api/users
+router.post '/', (req, res) ->
+    res.modelFromFormOrFail User, (user) ->
+        res.json user
 
 
 # METHODS

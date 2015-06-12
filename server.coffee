@@ -1,7 +1,7 @@
 # modules
 app = do require 'express'
 db = require './models/db'
-httpservice = require './services/http'
+http = require './services/http'
 # config
 net = require './config/networking'
 
@@ -14,7 +14,8 @@ do db.syncSchemas
 # EXPRESS BOOTSTRAP
 # -----------------
 # add middlewares
-httpservice.tuneResponses app
+http.addThirdPartyMiddlewares app
+http.tuneResponses app
 # def routing
 api = require './api'
 app.use '/api', api
