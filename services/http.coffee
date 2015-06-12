@@ -1,4 +1,5 @@
 # modules
+_ = require 'underscore'
 cors = require 'cors'
 bodyParser = require 'body-parser'
 
@@ -34,13 +35,33 @@ tuneResponses = (app) ->
                         message: error.message
                     } for error in problem.errors
 
-                    res.status 400
-                    res.json
-                        type: 'ValidationError'
-                        fields: errorslist
+                    res.validationError fields: errorslist
+
+        # helpers for returning errors
+        res.genericError = (message, type = 'GenericError', code = 400, additionalData = {}) ->
+            res.status code
+            res.json _.extend {
+                success: false
+                status: code
+                message: message
+            }, additionalData
+
+        res.notFoundError = (message, additionalData = {}) ->
+            message or= 'Your request asked for a an non-existent resource.'
+            res.genericError message, 'NotFoundError', 404, additionalData
+
+        res.accessDeniedError = (message, additionalData = {}) ->
+            message or= 'Access denied: you have no sufficient credentials to access this feature.'
+            res.genericError message, 'AccessDeniedError', 403, additionalData
+
+        res.pleaseLoginError = (message, additionalData = {}) ->
+            message or= 'Access denied: please log in to access this feature.'
+            res.genericError message, 'AccessDeniedError', 403, additionalData
+
+        res.validationError = (errors) ->
+            res.genericError 'The form has erroneous fields!', 'ValidationError', 400, errors
 
         do next
-
 
 # export
 module.exports =

@@ -22,7 +22,8 @@
     "cors": "^2.7.1",
     "express": "^4.12.4",
     "mysql": "^2.7.0",
-    "sequelize": "^3.2.0"
+    "sequelize": "^3.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {}
 }
