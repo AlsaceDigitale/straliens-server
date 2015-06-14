@@ -2,6 +2,9 @@
 
 **The frontend code has been moved to `save_static_frontend`.** It should be moved to another repository.
 
+ - [REST API Documentation](https://github.com/AlsaceDigitale/straliens-server/wiki/Straliens-Server-REST-API)
+
+
 ## Requirements
 
  - NodeJS & NPM
