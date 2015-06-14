@@ -1,13 +1,9 @@
-# modules
-express = require 'express'
-router = express.Router()
-
 # SETTING COLLECTIONS
 # -------------------
 
-users = require './users'
-router.use '/users', users
+module.exports = (app) ->
+    users = require './users'
+    users app
 
-
-# export routing
-module.exports = router;
+#teams = require './teams'
+#router.use '/teams', teams

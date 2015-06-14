@@ -1,6 +1,7 @@
 # modules
 Sequelize = require 'sequelize'
 db = require './db'
+Team = require './team'
 
 
 # custom validation constraints
@@ -25,6 +26,11 @@ User = db.orm.define 'User',
         validate:
             len: [3, 25]
             isUnique: checkUnique
+
+# def model assocs
+User.belongsTo Team,
+    foreignKey: 'teamId'
+    as: 'team'
 
 #export
 module.exports = User

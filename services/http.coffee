@@ -1,5 +1,6 @@
 # modules
 _ = require 'underscore'
+Router = require 'named-routes'
 cors = require 'cors'
 bodyParser = require 'body-parser'
 
@@ -8,10 +9,30 @@ bodyParser = require 'body-parser'
 addThirdPartyMiddlewares = (app) ->
     app.use cors()
     app.use bodyParser.urlencoded extended: true
+    # extend express and routing
+    router = new Router
+    router.extendExpress app
+    router.registerAppHelpers app
 
 # add some methods on responses
 tuneResponses = (app) ->
     app.use (req, res, next) ->
+        # returns a sequelize table to include
+        # model associations in REST
+        req.getAssocSections = (availableSections) ->
+            return if not req.query.sections? # if no section is specified
+            sections = req.query.sections.split ','
+            includes = []
+            includes.push {
+                model: require "../models/#{section}"
+                as: section
+            } for section in availableSections when section in sections
+            return includes
+
+        # builds URL from toute name and route params
+        res.url = (route, params) ->
+            app.namedRoutes.build route, params
+
         # 'model' is a sequelize schema
         res.findOrFail = (model, id, callback) ->
             model.findById id

@@ -18,7 +18,7 @@ http.addThirdPartyMiddlewares app
 http.tuneResponses app
 # def routing
 api = require './api'
-app.use '/api', api
+api app
 # listen
 app.listen net.http.port
 
