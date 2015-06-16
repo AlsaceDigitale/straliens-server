@@ -10,11 +10,14 @@ orm = new Sequelize net.sql.database, net.sql.username, net.sql.password, loggin
 
 
 # syncs the shemas to the db
-syncSchemas = ->
+syncSchemas = (callback) ->
     require './user'
     require './team'
+    require './point'
     orm.sync()
-        .then -> logger.info 'Database synced with schemas.'
+        .then ->
+            logger.info 'Database synced with schemas.'
+            do callback if callback
 
 
 # export

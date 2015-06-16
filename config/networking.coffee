@@ -5,3 +5,6 @@ module.exports =
         password: 'stralienspa$$'
     http:
         port: 3000
+    google:
+        apikey: 'AIzaSyDDttlqIKKSDwCO0iMiHgEqrAA6UynjoXQ'
+        geocodeUrlFn: (lat, lng, key) -> "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{lat},#{lng}&key=#{key}"
