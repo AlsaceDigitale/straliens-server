@@ -68,3 +68,48 @@ playerUpdateFeed:
             online: '<boolean>'
             energy: '<int>'
         } ]
+
+energySource:
+    energySourceId: '<int>'
+    lat: '<float>'
+    lng: '<float>'
+    name: '<string>'
+    address: '<string>'
+
+game:
+    gameId: '<int>'
+    startTime: '<timestamp>'
+    endTime: '<timestamp'
+
+gameEnergySource:
+    energySourceId: '<int>'
+    energyLevel: '<int>'
+    camp: '<enum>{HUMAN/ALIEN}' // nullable
+
+player:
+    playerId: '<int>'
+    pseudo: '<string>'
+    email: '<string>'
+    password: '<string>'
+
+gamePlayer:
+    playerId: '<int>'
+    gameId: '<int>'
+    score: '<int>'
+
+team:
+    teamId: '<int>'
+    name: '<string>'
+    logo: '<string>'
+    motto: '<string>'
+
+gameTeam:
+    teamId: '<int>'
+    score: '<int>'
+
+gameAction:
+    playerId: '<int>'
+    energySourceId: '<int>'
+    timestamp: '<timestamp>'
+    energyLevel: '<int>'
+    actionType: '<enum>'
