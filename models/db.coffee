@@ -1,5 +1,6 @@
 # modules
 Sequelize = require 'sequelize'
+logger = require '../services/logger'
 # config
 net = require '../config/networking'
 
@@ -13,7 +14,7 @@ syncSchemas = ->
     require './user'
     require './team'
     orm.sync()
-        .then -> console.log 'Database synced with schemas.'
+        .then -> logger.info 'Database synced with schemas.'
 
 
 # export
