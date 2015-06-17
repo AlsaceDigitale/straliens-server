@@ -27,7 +27,6 @@ Point.drop().then -> db.syncSchemas ->
         fn = (point) -> return ->
             point.name or= 'Unnamed Point'
             [lng, lat] = point.coordinates
-            geocodeUrl = net.google.geocodeUrlFn lat, lng, net.google.apikey
 
             # is address defined?
             if point.address
@@ -35,6 +34,7 @@ Point.drop().then -> db.syncSchemas ->
                 return
 
             # reverse geocoding using google
+            geocodeUrl = net.google.geocodeUrlFn lat, lng, net.google.apikey
             request geocodeUrl, (err, res, body) ->
                 logger.info "importing point \"#{point.name}\"".underline
                 logger.info " -> reverse geocoding: code #{res.statusCode}"
