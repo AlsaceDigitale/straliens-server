@@ -19,6 +19,8 @@
   "homepage": "https://github.com/AlsaceDigitale/straliens-server",
   "dependencies": {
     "body-parser": "^1.12.4",
+    "coffee": "^1.1.0",
+    "coffee-script": "^1.9.3",
     "colors": "^1.1.0",
     "cors": "^2.7.1",
     "epilogue": "^0.5.1",
