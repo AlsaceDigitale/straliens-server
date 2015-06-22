@@ -4,6 +4,7 @@ app = express();
 colors = require 'colors'
 db = require './models/db'
 http = require './services/http'
+io = require('socket.io')(http);
 logger = require './services/logger'
 # config
 net = require './config/networking'
@@ -23,8 +24,9 @@ http.tuneResponses app
 api = require './api'
 api app
 # listen
-app.listen process.env.PORT
-logger.info "HTTP REST API listening on port #{process.env.PORT}".green
+port = process.env.PORT || 3000
+app.listen port
+logger.info "HTTP REST API listening on port #{port}".green
 
 # SHOW INDEX
 # -------------------
@@ -35,4 +37,4 @@ app.get '/', (req, res) ->
 # SOCKET.IO BOOTSTRAP
 # -------------------
 
-# todo ;p
+# TO DO
