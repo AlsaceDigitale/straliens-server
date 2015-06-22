@@ -11,7 +11,10 @@
   text-align: center;
   position: relative;
   .logo {
-    border: 5px $green solid;
+    
+    font-family: norwester;
+    border-top: 5px $green solid;
+    border-bottom: 5px $green solid;
     background: rgba(black, 0.5);
     padding: 5px 20px;
     display: block;
