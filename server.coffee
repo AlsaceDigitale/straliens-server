@@ -23,8 +23,9 @@ http.tuneResponses app
 api = require './api'
 api app
 # listen
-app.listen process.env.PORT
-logger.info "HTTP REST API listening on port #{process.env.PORT}".green
+port = process.env.PORT || 3000
+app.listen port
+logger.info "HTTP REST API listening on port #{port}".green
 
 # SHOW INDEX
 # -------------------
