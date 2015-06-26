@@ -3,11 +3,20 @@ Points = require '../models/point'
 User = require '../models/user'
 Team = require '../models/team'
 Game = require '../models/game'
+Point = require '../models/point'
 GameController = require '../controllers/game_controller'
 
 # CONTROLLER
 # ----------
 module.exports = (app) ->
+
+
+    # GET /api/points
+    app.get '/api/points', 'points.list', (req, res) ->
+        list = []
+        Point.findAll().then (points) ->
+            list.push formatPoint(point) for point in points
+            res.json list
 
     # GET /api/points/:id/check
     app.get '/api/points/:code/check', (req, res) ->
@@ -26,9 +35,6 @@ module.exports = (app) ->
                             game: current_game
                             point: game_point
                 )
-
-
-
 
 # METHODS
 # -------
