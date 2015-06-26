@@ -13,12 +13,13 @@ pointDatas = require '../resources/points.json'
 # BEGIN
 # ------
 
-createPointFn = (name, address, lat, lng) ->
+createPointFn = (name, address, lat, lng, code) ->
     Point.create
         name: name
         address: address
         lat: lat
         lng: lng
+        code: code
 
 db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().then -> db.syncSchemas ->
     waitInc = 0
@@ -26,15 +27,14 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
         # callback generator
         fn = (point) -> return ->
             point.name or= 'Unnamed Point'
-            [lng, lat] = point.coordinates
 
             # is address defined?
             if point.address
-                createPointFn point.name, point.address, lat, lng
+                createPointFn point.name, point.address, point.lat, point.lng, point.code
                 return
 
             # reverse geocoding using google
-            geocodeUrl = net.google.geocodeUrlFn lat, lng, net.google.apikey
+            geocodeUrl = net.google.geocodeUrlFn point.lat, point.lng, net.google.apikey
             request geocodeUrl, (err, res, body) ->
                 logger.info "importing point \"#{point.name}\"".underline
                 logger.info " -> reverse geocoding: code #{res.statusCode}"
@@ -43,7 +43,7 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
                 if res.statusCode isnt 200
                     logger.error "    API ERROR #{res.statusCode}".red
                     address = 'Undefined address (API error)'
-                    createPointFn point.name, address, lat, lng
+                    createPointFn point.name, address, point.lat, point.lng, point.code
                     return
 
                 # no error - parsing results
@@ -56,7 +56,7 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
                     logger.info "    #{address}"
 
                 # save point in db
-                createPointFn point.name, address, lat, lng
+                createPointFn point.name, address, point.lat, point.lng, point.code
 
         # delay
         setTimeout fn(point), (waitInc += net.google.geocodeDelay)
