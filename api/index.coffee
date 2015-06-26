@@ -5,6 +5,9 @@ module.exports = (app) ->
     users = require './users'
     users app
 
+    teams = require './teams'
+    teams app
+
     points = require './points'
     points app
 
