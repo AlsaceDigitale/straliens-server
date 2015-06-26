@@ -12,10 +12,15 @@ checkUnique = (value, next) ->
             return next()
         .catch (err) ->
             return next err
+checkNotNull = (value, next) ->
+    if value.length == 0
+        throw new Error('Atention valeur nulle')
+    else
+        next()
 
-notNull: {
+notNull:
     msg: "Valeur nulle"
-}
+
 
 # def model
 User = db.orm.define 'User',
@@ -30,7 +35,7 @@ User = db.orm.define 'User',
         validate:
             len: [3, 25]
             isUnique: checkUnique
-            notNull: true
+            isNotNull: checkNotNull
     email:
         type: Sequelize.STRING 25
         unique: true
@@ -38,12 +43,12 @@ User = db.orm.define 'User',
         validate:
             len: [3, 25]
             isUnique: checkUnique
-            notNull: true
+            isNotNull: checkNotNull
     password:
         type: Sequelize.STRING
         allowNull: false
         validate:
-            notNull: true
+            isNotNull: checkNotNull
             len: [6,100]
 
 
