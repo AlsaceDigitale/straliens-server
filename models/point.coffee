@@ -12,6 +12,7 @@ Point = db.orm.define 'Point',
     address: Sequelize.STRING
     lat: Sequelize.FLOAT
     lng: Sequelize.FLOAT
+    code: Sequelize.STRING 8
 
 #export
 module.exports = Point
