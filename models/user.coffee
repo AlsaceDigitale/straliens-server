@@ -22,10 +22,6 @@ checkNotNull = (value, next) ->
     else
         next()
 
-notNull:
-    msg: "Valeur nulle"
-
-
 # def model
 User = db.orm.define 'User',
     id:
@@ -53,8 +49,6 @@ User = db.orm.define 'User',
         allowNull: false
         validate:
             isNotNull: checkNotNull
-            len: [6,100]
-
 
 # def model assocs
 User.belongsTo Team,
