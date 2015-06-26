@@ -8,6 +8,10 @@ $mq-breakpoints: (
     wide:    1300px,
 );
 @import 'mq';
+@font-face {
+    font-family: norwester;
+    src: url(norwester.otf);
+}
 h1, h2 {
   font-family: Futura, Futura-Medium, "Futura Medium", "Century Gothic", CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
   color: $black;
@@ -25,8 +29,13 @@ h2 {
 p {
   font-family: 'PT Serif', serif;
 }
-.clear {
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
   clear: both;
+  height: 0;
 }
 body {
   background: $grey;

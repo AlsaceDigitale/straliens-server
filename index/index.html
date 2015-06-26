@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Straliens Millenium</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="style.css">
   <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
   <script src="scrollReveal.min.js"></script>
@@ -11,25 +12,22 @@
     $(window).load(function() {
       new scrollReveal();
     });
-    $(document).ready(function() {
-      $('.scrollTo').click( function() { // Au clic sur un élément
-        var page = $(this).attr('href'); // Page cible
-        var speed = 750; // Durée de l'animation (en ms)
-        $('html, body').animate( { scrollTop: $(page).offset().top }, speed ); // Go
-        return false;
-      });
-    });
   </script>
 </head>
 <body>
   <div class="title">
-    <h1 class="logo">
-      Straliens Millenium
-    </h1>
+    <div class="filter"></div>
+    <div class="logo">
+      <img src="logo.png"/>
+      <div class="clearfix"></div>
+      <h1>
+        Straliens Millenium
+      </h1>
+    </div>
     <div class="edgefest">
       <a href="http://edgefest.fr">
-      <h1>Par</h1>
-      <img src="edgefest.png">
+      <h1>Par <span>Alsace Digitale</span> pour </h1>
+      <img src="edgefest.png" alt="Edgefest">
       </a>
     </div>
     <h2>Les <span>3 et 4 juillet</span> sauvez Strasbourg de l'invasion !</h2>
@@ -47,7 +45,6 @@
       </form>
     </div>
     <!--End mc_embed_signup-->
-    <a class="scrollTo" href="#content"></a>
   </div>
   <div class="content" id="content">
     <div data-sr="vF 0.2">
@@ -87,7 +84,7 @@
         <span>Ellen Ripley</span>, Warrant Officer, Nostromo Ship
       </p>
     </section>
-    <div class="clear"></div>
+    <div class="clearfix"></div>
     <section class="lastform" data-sr="vF 0.2">
       <!-- Begin MailChimp Signup Form -->
       <div class="mc_embed_signup">
@@ -106,7 +103,7 @@
     </section>
   </div>
   <footer>
-    <div class="realisation">
+    <div class="realisation" data-sr="vF 0.2">
       <h1>Réalisation</h1>
       <div class="hs">
         <a href="https://www.facebook.com/groups/402624123157676/">
@@ -114,21 +111,21 @@
           <h2>HackSXB</h2>
         </a>
       </div>
+      <div class="ad">
+        <a href="http://alsacedigitale.org">
+          <img src="logo_ad.png"/>
+          <h2>Alsace Digitale</h2>
+        </a>
+      </div>
       <h2>Pour participer au projet Straliens<br/><a href="mailto:hacksxb@alsacedigitale.org">hacksxb@alsacedigitale.org</a></h2>
     </div>
 
-    <div class="partenaires">
+    <div class="partenaires" data-sr="vF 0.2">
       <h1>Partenaires</h1>
       <div class="orange">
         <a href="http://orange.fr">
           <img src="logo_orange.jpg"/>
           <h2>Orange</h2>
-        </a>
-      </div>
-      <div class="ad">
-        <a href="http://alsacedigitale.org">
-          <img src="logo_ad.png"/>
-          <h2>Alsace Digitale</h2>
         </a>
       </div>
       <div class="scalingo">

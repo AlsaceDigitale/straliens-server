@@ -4,7 +4,6 @@ app = express();
 colors = require 'colors'
 db = require './models/db'
 http = require './services/http'
-io = require('socket.io')(http);
 logger = require './services/logger'
 # config
 net = require './config/networking'
@@ -37,4 +36,4 @@ app.get '/', (req, res) ->
 # SOCKET.IO BOOTSTRAP
 # -------------------
 
-# TO DO
+# todo ;p

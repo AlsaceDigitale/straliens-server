@@ -1,71 +1,72 @@
 @import 'config';
 
 .title {
-  border-bottom: none;
-  background: url(satstras.jpg);
   background-repeat: no-repeat; 
   background-position: center;
   background-size: cover;
-  height: 100vh;
-  min-height: 750px;
+  background-image: url(satstras.jpg);
   text-align: center;
   position: relative;
-  .logo {
-    border: 5px $green solid;
-    background: rgba(black, 0.5);
-    padding: 5px 20px;
-    display: block;
+  z-index: 0;
+  .filter {
+    width: 100%;
+    height: 100%;
     position: absolute;
-    left: 50%;
-    top: 20%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    color: $green;
-    white-space: nowrap;
-    @include mq(0, desktop) {
-      white-space: initial;
+    background: rgba(black, 0.5);
+    z-index: -1;
+  }
+  .logo {
+    img {
+      height: 250px;
+      margin-top: 40px;
+      margin-bottom: 30px;
     }
-    @include mq(desktop, wide) {
-      font-size: 70px;
-    }
-    @include mq(tablet, desktop) {
-      font-size: 50px;
-    }
-    @include mq(0, tablet) {
-      font-size: 40px;
-    }
-    div {
+    h1 {
+      display: inline-block;
+      overflow:hidden;
+      font-family: norwester;
+      border-top: 5px $green solid;
+      border-bottom: 5px $green solid;
+      padding: 5px 20px;
+      color: $green;
+      white-space: nowrap;
+      @include mq(0, desktop) {
+        white-space: initial;
+      }
+      @include mq(desktop, wide) {
+        font-size: 70px;
+      }
+      @include mq(tablet, desktop) {
+        font-size: 50px;
+      }
+      @include mq(0, tablet) {
+        font-size: 40px;
+      }
     }
   }
   .edgefest {
-    position: absolute;
-    left: 70%;
-    top: 35%;
-    transform: translate(0, -50%);
-    -webkit-transform: translate(0, -50%);
+    margin-top: 15px;
+    a {
+      text-decoration: none;
+    }
+    span {
+      color: #2E68D8;
+    }
     h1 {
-      font-size: 27px;
+      font-size: 23px;
       color: $white;
       display: inline-block;
-      position: absolute;
-      top: 47%;
-      left: -60%;
-      transform: translate(0, -50%);
-      -webkit-transform: translate(0, -50%);
     }
     img {
-      height: 30px;
+      height: 25px;
     }
   }
   h2 {
-    position: absolute;
-    left: 50%;
-    top: 47%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
     text-align: center;
     color: $white;
     font-size: 30px;
+    margin-top: 50px;
+    margin-bottom: 60px;
     span {
       color: $green;
       background: rgba(black, 0.6);
@@ -73,28 +74,8 @@
     }
   }
   .mc_embed_signup {
-    position: absolute;
-    left: 50%;
-    top: 70%;
-  }
-  .scrollTo {
-    color: $green;
-    display: block;
-    position: absolute;
-    bottom: 50px;
-    left: 50%;
-    transform: translate(-50%, 0%) rotate(135deg);
-    -webkit-transform: translate(-50%, 0%) rotate(135deg);
-    transition-duration: 250ms;
-    width: 60px;
-    height: 60px;
-    border-right: 40px solid $green;
-    border-top: 40px solid $green;
-    &:hover {
-      width: 70px;
-      height: 70px;
-      border-right: 50px solid $green;
-      border-top: 50px solid $green;
-    }
+    display: inline-block;
+    margin-bottom: 40px;
+    padding: 30px;
   }
 }

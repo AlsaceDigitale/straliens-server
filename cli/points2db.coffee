@@ -20,7 +20,7 @@ createPointFn = (name, address, lat, lng) ->
         lat: lat
         lng: lng
 
-Point.drop().then -> db.syncSchemas ->
+db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().then -> db.syncSchemas ->
     waitInc = 0
     for point in pointDatas.points
         # callback generator
