@@ -11,7 +11,7 @@ checkUnique = (value, next) ->
                 nickname: value
                 email: value
     .then (user) ->
-        if user then return next 'Ce nom d\'utilisateur ou cet e-mail ont déjà été choisis.'
+        if user then return next 'Ce nom d\'utilisateur ou cet e-mail ont déjà été choisis'
         return next()
     .catch (err) ->
         return next err

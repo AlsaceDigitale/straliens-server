@@ -42,10 +42,10 @@ tuneResponses = (app) ->
                     else
                         callback entity
 
-        # instantiates a model from an urlencoded form
+        # instantiates a model from an object
         # or fail with Bad Request
-        res.modelFromFormOrFail = (model, callback) ->
-            entity = model.build req.body
+        res.buildModelOrFail = (model, datas, callback) ->
+            entity = model.build datas
             entity.validate().then (problem) ->
                 if !problem
                     entity.save().then -> callback entity

@@ -1,4 +1,7 @@
 # modules
+_ = require 'underscore'
+_.mixin require 'underscore.deepclone'
+bcrypt = require 'bcrypt'
 User = require '../models/user'
 Team = require '../models/team'
 
@@ -24,12 +27,23 @@ module.exports = (app) ->
 
     # POST /api/users
     app.post '/api/users', 'users.post', (req, res) ->
-        res.modelFromFormOrFail User, (user) ->
-            # now, refresh data (for more coherent types in API responses)
-            selectUserFromReq user.id, req, (user) ->
-                res.status 201
-                res.set 'Location', res.url 'users.get', id: user.id
-                res.json user
+        # check the password
+        if not req.body.password? or req.body.password.length < 5
+            res.validationError fields: [
+                path: 'password'
+                message: 'Le mot de passe doit faire au moins 5 caractères'
+            ]
+            return
+        # hash the password
+        bcrypt.hash req.body.password, 8, (err, hash) ->
+            req.body.password = hash
+            # now try to build the entity
+            res.buildModelOrFail User, req.body, (user) ->
+                # now, refresh data (for more coherent types in API responses)
+                selectUserFromReq user.id, req, (user) ->
+                    res.status 201
+                    res.set 'Location', res.url 'users.get', id: user.id
+                    res.json formatUser(user)
 
 
 # METHODS
@@ -37,6 +51,7 @@ module.exports = (app) ->
 
 formatUser = (user) ->
     result = user
+    delete result.dataValues.password
     return result
 
 selectUserFromReq = (id, req, callback) ->
