@@ -13,14 +13,9 @@ checkUnique = (value, next) ->
         .catch (err) ->
             return next err
 
-isLongEnough = (value, next) ->
-    try
-        if val.length < 7
-            throw new Error('Please choose a longer password')
-        else
-            return next()
-    catch err
-        return next err
+notNull: {
+    msg: "Valeur nulle"
+}
 
 # def model
 User = db.orm.define 'User',
@@ -35,6 +30,7 @@ User = db.orm.define 'User',
         validate:
             len: [3, 25]
             isUnique: checkUnique
+            notNull: true
     email:
         type: Sequelize.STRING 25
         unique: true
@@ -42,17 +38,14 @@ User = db.orm.define 'User',
         validate:
             len: [3, 25]
             isUnique: checkUnique
-    password_hash:
+            notNull: true
+    password:
         type: Sequelize.STRING
         allowNull: false
-    password:
-        type: Sequelize.VIRTUAL
-        allowNull: false
-        set: (val) ->
-            @setDataValue 'password', val
-            # Remember to set the data value, otherwise it won't be validated
-            @setDataValue 'password_hash', passwordHash.generate(val);
-        validate: isLongEnough
+        validate:
+            notNull: true
+            len: [6,100]
+
 
 # def model assocs
 User.belongsTo Team,
