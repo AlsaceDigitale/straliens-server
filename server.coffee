@@ -22,6 +22,7 @@ http.tuneResponses app
 # def routing
 api = require './api'
 api app
+require('express-ws')(app)
 # listen
 port = process.env.PORT || 3000
 app.listen port
@@ -33,7 +34,10 @@ app.use express.static "#{__dirname}/index"
 app.get '/', (req, res) ->
     res.sendFile '/index.html'
 
-# SOCKET.IO BOOTSTRAP
+# WS
 # -------------------
+app.ws "/ws", (ws, req) ->
+  ws.on "message", (msg) ->
+    console.log msg
 
-# todo ;p
+  console.log "socket", req.testing

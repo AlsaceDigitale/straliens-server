@@ -35,7 +35,8 @@
     "sequelize": "^3.2.0",
     "underscore": "^1.8.3",
     "underscore.deepclone": "^0.1.1",
-    "winston": "^1.0.0"
+    "winston": "^1.0.0",
+    "express-ws": "~0.2.6"
   },
   "devDependencies": {}
 }
