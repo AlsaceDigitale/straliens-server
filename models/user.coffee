@@ -51,7 +51,7 @@ User = db.orm.define 'User',
         set: (val) ->
             @setDataValue 'password', val
             # Remember to set the data value, otherwise it won't be validated
-            @setDataValue 'password_hash', @salt + val
+            @setDataValue 'password_hash', passwordHash.generate(val);
         validate: isLongEnough
 
 # def model assocs
