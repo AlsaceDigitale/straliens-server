@@ -1,6 +1,6 @@
 # modules
-express = require("express");
-app = express();
+express = require 'express'
+app = express()
 colors = require 'colors'
 db = require './models/db'
 http = require './services/http'
@@ -29,9 +29,9 @@ logger.info "HTTP REST API listening on port #{port}".green
 
 # SHOW INDEX
 # -------------------
-app.use(express.static(__dirname + '/index'));
+app.use express.static "#{__dirname}/index"
 app.get '/', (req, res) ->
-  res.sendFile '/index.html'
+    res.sendFile '/index.html'
 
 # SOCKET.IO BOOTSTRAP
 # -------------------

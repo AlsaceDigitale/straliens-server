@@ -6,15 +6,19 @@ Team = require './team'
 
 # custom validation constraints
 checkUnique = (value, next) ->
-    User.find where: nickname: value
-        .then (user) ->
-            if user then return next 'This username already exists!'
-            return next()
-        .catch (err) ->
-            return next err
+    User.find
+        where: $or:
+                nickname: value
+                email: value
+    .then (user) ->
+        if user then return next 'Ce nom d\'utilisateur ou cet e-mail ont déjà été choisis.'
+        return next()
+    .catch (err) ->
+        return next err
+
 checkNotNull = (value, next) ->
     if value.length == 0
-        throw new Error('Atention valeur nulle')
+        throw new Error 'Valeur nulle non autorisée'
     else
         next()
 
