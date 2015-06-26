@@ -17,6 +17,7 @@ syncSchemas = (callback) ->
     require './point'
     require './game_user'
     require './game_point'
+    require './game_team'
 
     orm.sync()
         .then ->

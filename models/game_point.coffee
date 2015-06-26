@@ -11,9 +11,9 @@ GamePoint = db.orm.define 'GamePoint',
     side:
         type: Sequelize.VIRTUAL
         get: ->
-            return 'neutral' if this.energy is 0
-            return 'earthlings' if this.energy < 0
-            'straliens'
+            return 'NEUTRAL' if this.energy is 0
+            return 'EARTHLINGS' if this.energy < 0
+            'STRALIENS'
 
 # def model assocs
 GamePoint.belongsTo Point,

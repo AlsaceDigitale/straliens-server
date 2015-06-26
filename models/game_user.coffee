@@ -14,7 +14,7 @@ GameUser.belongsTo User,
     as: 'user'
 
 GameUser.belongsTo Game,
-    foreignKey: 'GameId'
+    foreignKey: 'gameId'
     as: 'game'
 
 
