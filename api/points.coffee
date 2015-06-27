@@ -59,6 +59,7 @@ formatPoint = (point) ->
 
 formatGamePoint = (game_point) ->
     result = game_point
+    result.energy = Math.abs(result.energy)
     return result
 
 selectGamePointFromReq = (pointId, gameId, callback) ->
