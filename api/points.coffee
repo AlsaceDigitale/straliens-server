@@ -25,19 +25,16 @@ module.exports = (app) ->
         User.findOne
             where: id: req.query.user_id
         .done (user) ->
-            console.log "api user #{user}"
             GameController.currentGame (current_game) ->
                 Points.findOne
                   where: code: req.params.code
-                .done ((point) ->
+                .done (point) ->
                     GameController.checkPoint user, current_game, point, (game_user, game_team, game_point) ->
-                        console.log "end of api call"
                         res.json
                             game_user: game_user
                             game_team: game_team
                             game: current_game
                             game_point: game_point
-                )
 
     # GET /api/points/:id
     app.get '/api/points/:id', (req, res) ->

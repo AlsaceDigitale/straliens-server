@@ -1,39 +1,42 @@
+# modules
 Sequelize = require 'sequelize'
-
+# models
 Game = require '../models/game'
 Point = require '../models/point'
 GamePoint = require '../models/game_point'
 GameUser = require '../models/game_user'
 GameTeam = require '../models/game_team'
-
+# config
 constants = require '../config/constants'
 
-GameManager = {
-  onPointCheckin: (game, game_user, game_team, cb) ->
-    console.log "GameManager.onPointCheckin #{game_user} #{game_team}"
-    GameUser.update
-      score: Sequelize.literal("score + #{constants.score.checkPoint.user}")
-    ,
-      where:
-        userId: game_user.id
-        gameId: game.id
-    .done ->
-      GameTeam.update
-        score: Sequelize.literal("score + #{constants.score.checkPoint.team}")
-      ,
-        where:
-          teamId: game_team.id
-          gameId: game.id
-      .done ->
-        GameUser.find
-          userId: game_user.id
-          gameId: game.id
-        .done (game_user) ->
-          GameTeam.find
-            teamId: game_team.id
-            gameId: game.id
-          .done (game_team) ->
-            cb game_user, game_team
-}
 
+GameManager =
+
+    onPointCheckin: (game, gameUser, gameTeam, cb) ->
+        console.log "GameManager.onPointCheckin #{game_user} #{gameTeam}"
+        userScoreUpd = "score + #{constants.score.checkPoint.user}"
+        teamScoreUpd = "score + #{constants.score.checkPoint.team}"
+
+        GameUser.update score: Sequelize.literal(userScoreUpd),
+            where:
+                userId: gameUser.id
+                gameId: game.id
+        .done ->
+            GameTeam.update score: Sequelize.literal(teamScoreUpd),
+                where:
+                    teamId: gameTeam.id
+                    gameId: game.id
+            .done ->
+                GameUser.find
+                    userId: gameUser.id
+                    gameId: game.id
+                .done (gameUser) ->
+                    GameTeam.find
+                        teamId: gameTeam.id
+                        gameId: game.id
+                    .done (gameTeam) ->
+                        cb gameUser, gameTeam
+
+
+#export
 module.exports = GameManager
