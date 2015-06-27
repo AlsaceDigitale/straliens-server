@@ -57,5 +57,6 @@ GameController =
                             GameManager.onPointCheckin game, gameUser, gameTeam, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
 
+
 # export
 module.exports = GameController
