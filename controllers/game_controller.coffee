@@ -36,7 +36,7 @@ GameController = {
       cb game_team[0]
 
   checkPoint: ((user, game, point, cb) ->
-    console.log "checkPoint #{game.id} #{point.id} #{user.id}"
+    console.log "checkPoint Game: #{game.id} Point: #{point.id} User: #{user.id}"
     GamePoint.findOrCreate
       where:
         pointId: point.id
