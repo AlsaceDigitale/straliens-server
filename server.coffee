@@ -24,9 +24,8 @@ api = require './api'
 api app
 require('express-ws')(app)
 # listen
-port = process.env.PORT || 3000
-app.listen port
-logger.info "HTTP REST API listening on port #{port}".green
+app.listen net.http.port
+logger.info "HTTP REST API listening on port #{net.http.port}".green
 
 # SHOW INDEX
 # -------------------
