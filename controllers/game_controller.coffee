@@ -68,16 +68,21 @@ GameController = {
             defaults:
                 energy: 0
         .done (game_point) ->
-            GamePoint.update
-                energy: Sequelize.literal('energy + 1')
-            ,
-                where:
-                    id: game_point[0].dataValues.id
-            .done =>
-                GamePoint.find
-                    id: game_point.id
-                .done (game_point) ->
-                    GameController.getGameUser game, user, (game_user) ->
+            GameController.getGameUser game, user, (game_user) ->
+                GameUser.update
+                    energy: 0
+                ,
+                    where:
+                        id: game_user.id
+                GamePoint.update
+                    energy: Sequelize.literal("energy + #{game_user.energy}")
+                ,
+                    where:
+                        id: game_point[0].dataValues.id
+                .done =>
+                    GamePoint.find
+                        id: game_point.id
+                    .done (game_point) ->
                         GameController.getGameTeamForUser game, user, (game_team) ->
                             GameManager.onPointCheckin game, game_user, game_team, (game_user, game_team) ->
                                 cb game_user, game_team, game_point
