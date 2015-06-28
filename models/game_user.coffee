@@ -6,7 +6,12 @@ Game = require './game'
 
 # def model
 GameUser = db.orm.define 'GameUser',
-    score: Sequelize.INTEGER
+    score:
+        type: Sequelize.INTEGER
+        defaultValue: 0
+    energy:
+        type: Sequelize.INTEGER
+        defaultValue: 0
 
 # def model assocs
 GameUser.belongsTo User,

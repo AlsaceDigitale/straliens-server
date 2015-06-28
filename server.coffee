@@ -8,6 +8,10 @@ logger = require './services/logger'
 # config
 net = require './config/networking'
 
+constants = require './config/constants'
+
+GameController = require './controllers/game_controller'
+
 
 # DATABASE
 # --------
@@ -40,3 +44,8 @@ app.ws "/ws", (ws, req) ->
     console.log msg
 
   console.log "socket", req.testing
+
+setInterval ->
+  GameController.manageEnergy()
+,
+  constants.energy.frequencyMs
