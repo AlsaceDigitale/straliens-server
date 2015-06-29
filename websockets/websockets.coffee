@@ -23,3 +23,14 @@ class WebSockets
 
 # export
 module.exports = new WebSockets
+
+# Message : {
+#   type: "message|notif"
+#   to: "public|team|side",
+#    msg: "content of message",
+#    author: {
+#        id: "ID",
+#        user: "Username"
+#    },
+#    cDate: "Datetime",
+#}
