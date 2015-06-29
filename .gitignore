@@ -1,2 +1,4 @@
 node_modules
 general.log
+*.map
+*.js

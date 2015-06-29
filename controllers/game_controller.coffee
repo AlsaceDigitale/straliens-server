@@ -4,6 +4,7 @@ logger = require '../services/logger'
 gameManager = require './game_manager'
 # models
 Game = require '../models/game'
+Team = require '../models/team'
 User = require '../models/user'
 Point = require '../models/point'
 GamePoint = require '../models/game_point'
@@ -19,6 +20,7 @@ class GameController
         userEnergyUpd = "LEAST(#{constants.energy.maxValue}, energy + #{constants.energy.value})"
         @currentGame (currentGame) =>
             User.find({}).done (user) =>
+                if !user then return
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
@@ -62,19 +64,30 @@ class GameController
             where:
                 pointId: point.id
                 gameId: game.id
+            defaults:
+                energy: 0
         .done (gamePoint) =>
-            GameController.getGameUser game, user, (gameUser) ->
-                pointEnergyUpd = "energy + #{gameUser.energy}"
-                GameUser.update energy: 0,
-                    where: id: gameUser.id
-                GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
-                    where: id: gamePoint[0].dataValues.id
-                .done =>
-                    GamePoint.find id: gamePoint.id
-                    .done (gamePoint) =>
-                        @getGameTeamForUser game, user, (gameTeam) ->
+            @getGameUser game, user, (gameUser) =>
+                @getGameTeamForUser game, user, (gameTeam) ->
+                    GameUser.update
+                        energy: 0
+                    ,
+                        where:
+                            id: gameUser.id
+                    logger.info "Current user team side is #{gameTeam.side}"
+                    expr=if gameTeam.side == Team.sides.STRALIENS then "energy + #{gameUser.energy}" else "energy - #{gameUser.energy}"
+                    GamePoint.update
+                        energy: Sequelize.literal(expr)
+                    ,
+                        where:
+                            id: gamePoint[0].dataValues.id
+                    .done =>
+                        GamePoint.find
+                            id: gamePoint.id
+                        .done (gamePoint) ->
                             gameManager.onPointCheckin game, gameUser, gameTeam, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
+
 
 # export
 module.exports = new GameController

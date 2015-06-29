@@ -39,5 +39,9 @@ Team = db.orm.define 'Team',
         validate:
             isNotNull: checkNotNull
 
+Team.sides =
+    STRALIENS: "STRALIENS"
+    EARTHLINGS: "EARTHLINGS"
+
 #export
 module.exports = Team

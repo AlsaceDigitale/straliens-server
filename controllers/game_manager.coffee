@@ -12,7 +12,7 @@ constants = require '../config/constants'
 
 class GameManager
     onPointCheckin: (game, gameUser, gameTeam, cb) ->
-        console.log "manager: Point checkin #{game_user} #{gameTeam}"
+        console.log "manager: Point checkin #{gameUser} #{gameTeam}"
         userScoreUpd = "score + #{constants.score.checkPoint.user}"
         teamScoreUpd = "score + #{constants.score.checkPoint.team}"
 
