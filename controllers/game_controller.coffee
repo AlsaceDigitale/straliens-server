@@ -4,7 +4,7 @@ logger = require '../services/logger'
 gameManager = require './game_manager'
 # models
 Game = require '../models/game'
-Team = require '../models/Team'
+Team = require '../models/team'
 User = require '../models/user'
 Point = require '../models/point'
 GamePoint = require '../models/game_point'
@@ -20,6 +20,7 @@ class GameController
         userEnergyUpd = "LEAST(#{constants.energy.maxValue}, energy + #{constants.energy.value})"
         @currentGame (currentGame) =>
             User.find({}).done (user) =>
+                if !user then return
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
