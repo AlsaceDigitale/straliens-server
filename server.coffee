@@ -5,12 +5,10 @@ colors = require 'colors'
 db = require './models/db'
 http = require './services/http'
 logger = require './services/logger'
+gameController = require './controllers/game_controller'
 # config
 net = require './config/networking'
-
 constants = require './config/constants'
-
-GameController = require './controllers/game_controller'
 
 
 # DATABASE
@@ -31,21 +29,23 @@ require('express-ws')(app)
 app.listen net.http.port
 logger.info "HTTP REST API listening on port #{net.http.port}".green
 
-# SHOW INDEX
-# -------------------
+
+# EXPOSE LANDING FILES
+# --------------------
 app.use express.static "#{__dirname}/index"
 app.get '/', (req, res) ->
     res.sendFile '/index.html'
 
-# WS
-# -------------------
+
+# WEBSOCKETS
+# ----------
 app.ws "/ws", (ws, req) ->
   ws.on "message", (msg) ->
     console.log msg
 
   console.log "socket", req.testing
 
-setInterval ->
-  GameController.manageEnergy()
-,
-  constants.energy.frequencyMs
+
+# START GAME
+# ----------
+setInterval gameController.manageEnergy, constants.energy.frequencyMs
