@@ -1,9 +1,23 @@
 # modules
 _ = require 'underscore'
+expressSession = require 'express-session'
+sharedSession = require 'express-socket.io-session'
 Router = require 'named-routes'
 cors = require 'cors'
 bodyParser = require 'body-parser'
+# config
+net = require '../config/networking'
 
+
+# configure session for express + socket.io
+addSession = (app, io) ->
+    session = expressSession
+        secret: net.http.cookieSecret
+        resave: true
+        saveUninitialized: true
+
+    app.use session
+    io.use sharedSession(session)
 
 # enable middlewares
 addThirdPartyMiddlewares = (app) ->
@@ -86,5 +100,6 @@ tuneResponses = (app) ->
 
 # export
 module.exports =
+    addSession: addSession
     addThirdPartyMiddlewares: addThirdPartyMiddlewares
     tuneResponses: tuneResponses
