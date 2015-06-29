@@ -1,9 +1,10 @@
 module.exports =
     sql:
         database: 'straliens'
-        username: 'root'
-        password: 'rootrootroot'
-        host: 'root.c3dgxuvof2mc.eu-west-1.rds.amazonaws.com'
+        database: 'straliens'
+        username: 'straliens'
+        password: 'stralienspa$$'      
+        host: 'localhost'
     http:
         port: process.env.PORT || 3000
         cookieSecret: '~4NaTWbY67!~'

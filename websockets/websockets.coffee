@@ -19,6 +19,7 @@ class WebSockets
                 return
             # register the client
             @clients[socket.user.id] = [] if not @clients[socket.user.id]
+            socket.emit 'message', 'test'
 
 
 # export
