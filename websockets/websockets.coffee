@@ -15,9 +15,22 @@ class WebSockets
             socket.user = socket.handshake.session.user
             clients.push socket
 
+            console.log "new client"
+
             socket.on '', ->
-                console.log "test" 
+                console.log "test"
 
 
 # export
 module.exports = new WebSockets
+
+# Message : {
+#   type: "message|notif"
+#   to: "public|team|side",
+#    msg: "content of message",
+#    author: {
+#        id: "ID",
+#        user: "Username"
+#    },
+#    cDate: "Datetime",
+#}
