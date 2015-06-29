@@ -1,5 +1,4 @@
 # modules
-Points = require '../models/point'
 User = require '../models/user'
 Team = require '../models/team'
 Game = require '../models/game'
@@ -26,8 +25,8 @@ module.exports = (app) ->
             where: id: req.query.user_id
         .done (user) ->
             GameController.currentGame (current_game) ->
-                Points.findOne
-                  where: code: req.params.code
+                Point.findOne
+                    where: code: req.params.code
                 .done (point) ->
                     GameController.checkPoint user, current_game, point, (game_user, game_team, game_point) ->
                         res.json
