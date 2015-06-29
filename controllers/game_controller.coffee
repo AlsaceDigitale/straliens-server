@@ -2,6 +2,7 @@
 Sequelize = require 'sequelize'
 # models
 Game = require '../models/game'
+Team = require '../models/Team'
 User = require '../models/user'
 Point = require '../models/point'
 GamePoint = require '../models/game_point'
@@ -69,21 +70,23 @@ GameController = {
                 energy: 0
         .done (game_point) ->
             GameController.getGameUser game, user, (game_user) ->
-                GameUser.update
-                    energy: 0
-                ,
-                    where:
-                        id: game_user.id
-                GamePoint.update
-                    energy: Sequelize.literal("energy + #{game_user.energy}")
-                ,
-                    where:
-                        id: game_point[0].dataValues.id
-                .done =>
-                    GamePoint.find
-                        id: game_point.id
-                    .done (game_point) ->
-                        GameController.getGameTeamForUser game, user, (game_team) ->
+                GameController.getGameTeamForUser game, user, (game_team) ->
+                    GameUser.update
+                        energy: 0
+                    ,
+                        where:
+                            id: game_user.id
+                    console.log "Current user team side is #{game_team.side}"
+                    expr=if game_team.side == Team.sides.STRALIENS then "energy + #{game_user.energy}" else "energy - #{game_user.energy}"
+                    GamePoint.update
+                        energy: Sequelize.literal(expr)
+                    ,
+                        where:
+                            id: game_point[0].dataValues.id
+                    .done =>
+                        GamePoint.find
+                            id: game_point.id
+                        .done (game_point) ->
                             GameManager.onPointCheckin game, game_user, game_team, (game_user, game_team) ->
                                 cb game_user, game_team, game_point
     )
