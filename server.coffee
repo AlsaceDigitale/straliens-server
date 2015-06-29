@@ -46,7 +46,8 @@ httpServer.listen net.http.port, ->
     logger.info "HTTP/WS listening on *:#{net.http.port}".green
 
 # start game logic
-setInterval gameController.manageEnergy, constants.energy.frequencyMs
+setInterval gameController.manageEnergyUser, constants.energy.user.frequencyMs
+setInterval gameController.manageEnergyPoint, constants.energy.point.frequencyMs
 setInterval gameController.assignTeams, 30000
 
 # log errors

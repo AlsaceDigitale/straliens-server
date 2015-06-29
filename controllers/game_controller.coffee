@@ -41,18 +41,26 @@ class GameController
                 callback ret
 
 
-
-
-
-    manageEnergy: =>
-        logger.info 'controller: Managing energy'
-        userEnergyUpd = "LEAST(#{constants.energy.maxValue}, energy + #{constants.energy.value})"
+    manageEnergyUser: =>
+        logger.info 'controller: Managing energy for users'
+        userEnergyUpd = "LEAST(#{constants.energy.user.maxValue}, energy + #{constants.energy.user.value})"
         @currentGame (currentGame) =>
             User.find({}).done (user) =>
                 if !user then return
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
+
+    manageEnergyPoint: =>
+        logger.info 'controller: Managing energy for points'
+        pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
+        @currentGame (currentGame) =>
+            Point.find({}).done (point) =>
+                console.log "Point #{point}"
+                if !point then return
+                @getGamePoint point.dataValues, currentGame, (gamePoint) =>
+                    GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
+                        where: id: gamePoint.id
 
     assignTeams: =>
         logger.info 'controller: Assign teams'
@@ -72,6 +80,17 @@ class GameController
             startTime: $lt: now
             endTime: $gt: now
         .done callback
+
+    getGamePoint: (point, game, callback) ->
+        GamePoint.findOrCreate
+            defaults: energy: 0
+            where:
+                pointId: point.id
+                gameId: game.id
+            defaults:
+                energy: 0
+        .done (gamePoint) ->
+            callback gamePoint[0]
 
     getGameUser: (game, user, cb) ->
         GameUser.findOrCreate
@@ -100,14 +119,7 @@ class GameController
 
     checkPoint: (user, game, point, cb) ->
         logger.info "controller: Point check gid=#{game.id} pid=#{point.id} uid=#{user.id}"
-        GamePoint.findOrCreate
-            defaults: energy: 0
-            where:
-                pointId: point.id
-                gameId: game.id
-            defaults:
-                energy: 0
-        .done (gamePoint) =>
+        @getGamePoint point, game, (gamePoint) =>
             @getGameUser game, user, (gameUser) =>
                 @getGameTeamForUser game, user, (gameTeam) ->
                     GameUser.update
@@ -121,7 +133,7 @@ class GameController
                         energy: Sequelize.literal(expr)
                     ,
                         where:
-                            id: gamePoint[0].dataValues.id
+                            id: gamePoint.id
                     .done =>
                         GamePoint.find
                             id: gamePoint.id
