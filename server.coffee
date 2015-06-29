@@ -49,5 +49,6 @@ httpServer.listen net.http.port, ->
 setInterval gameController.manageEnergy, constants.energy.frequencyMs
 setInterval gameController.assignTeams, 30000
 
-process.on 'uncaughtException', (err) -> 
-    console.error err
+# log errors
+process.on 'uncaughtException', (err) ->
+    console.error err.stack
