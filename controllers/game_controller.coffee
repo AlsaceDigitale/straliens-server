@@ -12,9 +12,38 @@ GameTeam = require '../models/game_team'
 GameUser = require '../models/game_user'
 # config
 constants = require '../config/constants'
-
+db = require '../models/db'
 
 class GameController
+
+    getTeamsCount: (callback) =>
+        sql="""
+        select count(*)-1 as count, side from (
+        select count(*), side from gameteams group by side
+        UNION
+        select * from (SELECT 0 as 'count(*)', "STRALIENS" as 'side' UNION
+        SELECT 0 as 'count(*)', "EARTHLINGS" as 'side' ) sides ) x group by side;
+        """
+        db.orm.query sql, type: Sequelize.QueryTypes.SELECT
+        .then (data) ->
+            ret =
+                EARTHLINGS: 0
+                STRALIENS: 0
+
+            for k of data
+                d=data[k]
+                if d.side == Team.sides.EARTHLINGS
+                    ret.EARTHLINGS = d.count
+                else
+                    ret.STRALIENS = d.count
+
+            if callback
+                callback ret
+
+
+
+
+
     manageEnergy: =>
         logger.info 'controller: Managing energy'
         userEnergyUpd = "LEAST(#{constants.energy.maxValue}, energy + #{constants.energy.value})"
@@ -23,6 +52,18 @@ class GameController
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
+
+    assignTeams: =>
+        logger.info 'controller: Assign teams'
+        @currentGame (currentGame) =>
+            Team.find({}).done (team) =>
+                @getGameTeamForTeam currentGame, team, (gameTeam) =>
+                    @getTeamsCount (teamsCount) =>
+                        if [Team.sides.EARTHLINGS, Team.sides.STRALIENS].indexOf(gameTeam.dataValues.side) < 0
+                            nextTeam = if teamsCount.STRALIENS > teamsCount.EARTHLINGS then Team.sides.EARTHLINGS else Team.sides.STRALIENS
+                            console.log "Assigning side #{nextTeam} to GameTeam #{gameTeam.dataValues.id}"
+                            GameTeam.update side: nextTeam,
+                                where: id: gameTeam.dataValues.id
 
     currentGame: (callback) ->
         now = new Date

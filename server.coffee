@@ -53,3 +53,4 @@ httpServer.listen net.http.port, ->
 
 # start game logic
 setInterval gameController.manageEnergy, constants.energy.frequencyMs
+setInterval gameController.assignTeams, 30000
