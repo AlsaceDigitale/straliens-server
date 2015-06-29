@@ -78,6 +78,7 @@ tuneResponses = (app) ->
             res.json _.extend {
                 success: false
                 status: code
+                type: type
                 message: message
             }, additionalData
 

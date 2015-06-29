@@ -2,6 +2,9 @@
 # -------------------
 
 module.exports = (app) ->
+    services = require './services'
+    services app
+
     users = require './users'
     users app
 

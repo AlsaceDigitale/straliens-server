@@ -2,6 +2,7 @@
 express = require 'express'
 nodeHttp = require 'http'
 colors = require 'colors'
+console = require 'better-console'
 db = require './models/db'
 ws = require './websockets/websockets'
 http = require './services/http'
@@ -48,3 +49,6 @@ httpServer.listen net.http.port, ->
 setInterval gameController.manageEnergyUser, constants.energy.user.frequencyMs
 setInterval gameController.manageEnergyPoint, constants.energy.point.frequencyMs
 setInterval gameController.assignTeams, 30000
+
+process.on 'uncaughtException', (err) -> 
+    console.error err
