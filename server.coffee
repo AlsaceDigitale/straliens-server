@@ -1,9 +1,9 @@
 # modules
 express = require 'express'
 nodeHttp = require 'http'
-socketIo = require 'socket.io'
 colors = require 'colors'
 db = require './models/db'
+ws = require './websockets/websockets'
 http = require './services/http'
 logger = require './services/logger'
 gameController = require './controllers/game_controller'
@@ -17,32 +17,25 @@ constants = require './config/constants'
 do db.syncSchemas
 
 
-# EXPRESS HTTP
-# ------------
+# EXPRESS / SOCKET.IO
+# -------------------
 app = express()
+httpServer = nodeHttp.Server app
+# socket.io
+ws.setHttpServer httpServer
 # add middlewares
+http.addSession app, ws.io
 http.addThirdPartyMiddlewares app
 http.tuneResponses app
 # def routing
 api = require './api'
 api app
-# listen
-httpServer = nodeHttp.Server app
-
-
-# SOCKET.IO WEBSOCKETS
-# --------------------
-io = socketIo httpServer
-io.on 'connection', (socket) ->
-    # console.log 'an user is now using websockets'
-    # socket.on 'msg', (msg...
 
 
 # EXPOSE LANDING FILES
 # --------------------
 app.use express.static "#{__dirname}/index"
-app.get '/', (req, res) ->
-    res.sendFile '/index.html'
+app.get '/', (req, res) -> res.sendFile '/index.html'
 
 
 # START APPLICATION

@@ -26,6 +26,8 @@
     "cors": "^2.7.1",
     "epilogue": "^0.5.1",
     "express": "^4.12.4",
+    "express-session": "^1.11.3",
+    "express-socket.io-session": "^1.2.6",
     "lodash": "^3.9.3",
     "mysql": "^2.7.0",
     "named-routes": "^2.0.1",

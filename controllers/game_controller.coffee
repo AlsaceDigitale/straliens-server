@@ -20,6 +20,7 @@ class GameController
         userEnergyUpd = "LEAST(#{constants.energy.maxValue}, energy + #{constants.energy.value})"
         @currentGame (currentGame) =>
             User.find({}).done (user) =>
+                if !user then return
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
