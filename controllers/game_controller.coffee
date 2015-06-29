@@ -46,7 +46,7 @@ class GameController
         userEnergyUpd = "LEAST(#{constants.energy.user.maxValue}, energy + #{constants.energy.user.value})"
         @currentGame (currentGame) =>
             User.find({}).done (user) =>
-                if !user then return
+                if !user or !currentGame then return
                 @getGameUser currentGame, user.dataValues, (gameUser) ->
                     GameUser.update energy: Sequelize.literal(userEnergyUpd),
                         where: id: gameUser.id
@@ -57,7 +57,7 @@ class GameController
         @currentGame (currentGame) =>
             Point.find({}).done (point) =>
                 console.log "Point #{point}"
-                if !point then return
+                if !point or !currentGame then return
                 @getGamePoint point.dataValues, currentGame, (gamePoint) =>
                     GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
                         where: id: gamePoint.id
@@ -65,6 +65,7 @@ class GameController
     assignTeams: =>
         logger.info 'controller: Assign teams'
         @currentGame (currentGame) =>
+            if !currentGame then return
             Team.find({}).done (team) =>
                 @getGameTeamForTeam currentGame, team, (gameTeam) =>
                     @getTeamsCount (teamsCount) =>
