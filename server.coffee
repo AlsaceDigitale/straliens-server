@@ -1,6 +1,7 @@
 # modules
 express = require 'express'
-app = express()
+nodeHttp = require 'http'
+socketIo = require 'socket.io'
 colors = require 'colors'
 db = require './models/db'
 http = require './services/http'
@@ -16,18 +17,25 @@ constants = require './config/constants'
 do db.syncSchemas
 
 
-# EXPRESS BOOTSTRAP
-# -----------------
+# EXPRESS HTTP
+# ------------
+app = express()
 # add middlewares
 http.addThirdPartyMiddlewares app
 http.tuneResponses app
 # def routing
 api = require './api'
 api app
-require('express-ws')(app)
 # listen
-app.listen net.http.port
-logger.info "HTTP REST API listening on port #{net.http.port}".green
+httpServer = nodeHttp.Server app
+
+
+# SOCKET.IO WEBSOCKETS
+# --------------------
+io = socketIo httpServer
+io.on 'connection', (socket) ->
+    # console.log 'an user is now using websockets'
+    # socket.on 'msg', (msg...
 
 
 # EXPOSE LANDING FILES
@@ -37,15 +45,11 @@ app.get '/', (req, res) ->
     res.sendFile '/index.html'
 
 
-# WEBSOCKETS
-# ----------
-app.ws "/ws", (ws, req) ->
-  ws.on "message", (msg) ->
-    console.log msg
+# START APPLICATION
+# -----------------
+# start http + websockets
+httpServer.listen net.http.port, ->
+    logger.info "HTTP/WS listening on *:#{net.http.port}".green
 
-  console.log "socket", req.testing
-
-
-# START GAME
-# ----------
+# start game logic
 setInterval gameController.manageEnergy, constants.energy.frequencyMs
