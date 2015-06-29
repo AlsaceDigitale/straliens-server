@@ -26,4 +26,9 @@ module.exports = (app) ->
                             res.genericError "Invalid password for user #{nickname}", 'AuthenticationError'
                         else
                             req.session.user = user.dataValues
-                            res.json success: true, message: 'User authenticated'
+                            res.json formatUser(user)
+
+formatUser = (user) ->
+    result = user
+    delete result.dataValues.password
+    return result
