@@ -19,7 +19,7 @@ class GameController
     getTeamsCount: (callback) =>
         sql="""
         select count(*)-1 as count, side from (
-        select count(*), side from gameteams group by side
+        select count(*), side from GameTeams group by side
         UNION
         select * from (SELECT 0 as 'count(*)', "STRALIENS" as 'side' UNION
         SELECT 0 as 'count(*)', "EARTHLINGS" as 'side' ) sides ) x group by side;

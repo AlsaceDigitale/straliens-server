@@ -26,9 +26,16 @@ module.exports = (app) ->
                             res.genericError "Invalid password for user #{nickname}", 'AuthenticationError'
                         else
                             req.session.user = user.dataValues
-                            res.json formatUser(user)
+                            selectUserFromReq user.id, req, (user) ->
+                                res.json formatUser(user)
 
 formatUser = (user) ->
     result = user
     delete result.dataValues.password
     return result
+
+selectUserFromReq = (id, req, callback) ->
+    User.findOne
+        where: id: id
+        include: req.getAssocSections ['team']
+    .done callback
