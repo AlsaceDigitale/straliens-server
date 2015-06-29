@@ -1,6 +1,8 @@
 # straliens-server
 
- - [REST API Documentation](https://github.com/AlsaceDigitale/straliens-server/wiki/Straliens-Server-REST-API)
+ - [Straliens REST API Documentation](https://github.com/AlsaceDigitale/straliens-server/wiki/Straliens-Server-REST-API)
+ - [CoffeeScript Documentation](http://coffeescript.org/) – important!
+ - [CoffeeScript Style Guidelines](https://github.com/polarmobile/coffeescript-style-guide)
 
 
 ## Requirements

@@ -10,10 +10,9 @@ GameTeam = require '../models/game_team'
 constants = require '../config/constants'
 
 
-GameManager =
-
+class GameManager
     onPointCheckin: (game, gameUser, gameTeam, cb) ->
-        console.log "GameManager.onPointCheckin #{game_user} #{gameTeam}"
+        console.log "manager: Point checkin #{gameUser} #{gameTeam}"
         userScoreUpd = "score + #{constants.score.checkPoint.user}"
         teamScoreUpd = "score + #{constants.score.checkPoint.team}"
 
@@ -39,4 +38,4 @@ GameManager =
 
 
 #export
-module.exports = GameManager
+module.exports = new GameManager
