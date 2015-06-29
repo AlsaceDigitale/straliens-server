@@ -12,6 +12,7 @@ class WebSockets
 
     handleConnection: ->
         @io.on 'connection', (socket) ->
+            socket.user = socket.handshake.session.user
 
 
 # export
