@@ -4,7 +4,7 @@ logger = require '../services/logger'
 gameManager = require './game_manager'
 # models
 Game = require '../models/game'
-Team = require '../models/Team'
+Team = require '../models/team'
 User = require '../models/user'
 Point = require '../models/point'
 GamePoint = require '../models/game_point'
