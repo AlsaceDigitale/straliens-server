@@ -43,39 +43,40 @@ module.exports = (app) ->
             return
         Team.count
             where:
-                teamId: req.body.teamId
+                id: req.body.teamId
                 password: req.body.teamPassword
         .then (count) ->
-            if count and count == 0
+            console.log count
+            if count == 0
                 res.validationError fields: [
                     path: 'teamPassword'
                     message: 'Mot de passe d\'équipe invalide'
                 ]
                 return
-        User.count where: teamId: req.body.teamId
-        .then (amount) ->
-            if amount and amount >= 10
+            User.count where: teamId: req.body.teamId
+            .then (amount) ->
+                if amount and amount >= 10
+                    res.validationError fields: [
+                        path: 'teamId'
+                        message: 'L\'équipe a atteint la limite de joueurs'
+                    ]
+                    return
+                # hash the password
+                bcrypt.hash req.body.password, 8, (err, hash) ->
+                    req.body.password = hash
+                    # now try to build the entity
+                    res.buildModelOrFail User, req.body, (user) ->
+                        # now, refresh data (for more coherent types in API responses)
+                        selectUserFromReq user.id, req, (user) ->
+                            res.status 201
+                            res.set 'Location', res.url 'users.get', id: user.id
+                            res.json formatUser(user)
+            .catch (err) ->
                 res.validationError fields: [
                     path: 'teamId'
-                    message: 'L\'équipe a atteint la limite de joueurs'
+                    message: err
                 ]
                 return
-            # hash the password
-            bcrypt.hash req.body.password, 8, (err, hash) ->
-                req.body.password = hash
-                # now try to build the entity
-                res.buildModelOrFail User, req.body, (user) ->
-                    # now, refresh data (for more coherent types in API responses)
-                    selectUserFromReq user.id, req, (user) ->
-                        res.status 201
-                        res.set 'Location', res.url 'users.get', id: user.id
-                        res.json formatUser(user)
-        .catch (err) ->
-            res.validationError fields: [
-                path: 'teamId'
-                message: err
-            ]
-            return
 
 
 
