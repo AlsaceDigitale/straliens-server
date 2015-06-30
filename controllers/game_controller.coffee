@@ -90,8 +90,9 @@ class GameController
     currentGame: (callback) ->
         now = new Date
         Game.findOne
-            startTime: $lt: now
-            endTime: $gt: now
+            where:
+                startTime: $lt: now
+                endTime: $gt: now
         .done callback
 
     getGamePoint: (point, game, callback) ->
