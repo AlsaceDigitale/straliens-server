@@ -42,6 +42,15 @@ tuneResponses = (app) ->
                 as: section
             } for section in availableSections when section in sections
             return includes
+        
+        # checks if a user is authenticated
+        # otherwise, throw a 403 error
+        req.checkAuthentication = ->
+            unless req.session.user
+                do res.pleaseLoginError
+                return false
+            else
+                return true
 
         # builds URL from toute name and route params
         res.url = (route, params) ->
