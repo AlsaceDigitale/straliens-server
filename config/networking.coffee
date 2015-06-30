@@ -1,9 +1,6 @@
 module.exports =
     sql:
-        database: process.env.DB_NAME || 'straliens'
-        username: process.env.DB_USER || 'straliens'
-        password: process.env.DB_PASS || 'stralienspa$$'      
-        host: process.env.DB_HOST || 'localhost'
+        db_url: process.env.DATABASE_URL || 'mysql://straliens:stralienspa$$@localhost/straliens'
     http:
         port: process.env.PORT || 3000
         cookieSecret: '~4NaTWbY67!~'

@@ -6,7 +6,7 @@ net = require '../config/networking'
 
 
 # connect to the database
-orm = new Sequelize net.sql.database, net.sql.username, net.sql.password, logging: false, host: net.sql.host
+orm = new Sequelize net.sql.db_url, logging: false
 
 # syncs the shemas to the db
 syncSchemas = (callback) ->
