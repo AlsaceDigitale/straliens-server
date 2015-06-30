@@ -41,6 +41,17 @@ module.exports = (app) ->
                 message: 'Aucune équipe n\'a été spécifiée'
             ]
             return
+        Team.count
+            where:
+                teamId: req.body.teamId
+                password: req.body.teamPassword
+        .then (count) ->
+            if count and count == 0
+                res.validationError fields: [
+                    path: 'teamPassword'
+                    message: 'Mot de passe d\'équipe invalide'
+                ]
+                return
         User.count where: teamId: req.body.teamId
         .then (amount) ->
             if amount and amount >= 10
