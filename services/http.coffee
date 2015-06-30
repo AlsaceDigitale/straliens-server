@@ -21,7 +21,7 @@ addSession = (app, io) ->
 
 # enable middlewares
 addThirdPartyMiddlewares = (app) ->
-    app.use cors()
+    app.use cors credentials: true
     app.use bodyParser.urlencoded extended: true
     # extend express and routing
     router = new Router
@@ -42,7 +42,7 @@ tuneResponses = (app) ->
                 as: section
             } for section in availableSections when section in sections
             return includes
-        
+
         # checks if a user is authenticated
         # otherwise, throw a 403 error
         req.checkAuthentication = ->
