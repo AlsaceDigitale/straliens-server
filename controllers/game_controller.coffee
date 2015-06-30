@@ -49,7 +49,6 @@ class GameController
             .done (users) =>
                 if !users or !currentGame then return
                 for user in users
-                    console.log user
                     @getGameUser currentGame, user.dataValues, (gameUser) ->
                         GameUser.update energy: Sequelize.literal(userEnergyUpd),
                             where: id: gameUser.id
