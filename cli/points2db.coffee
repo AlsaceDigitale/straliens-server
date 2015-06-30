@@ -13,8 +13,9 @@ pointDatas = require '../resources/points.json'
 # BEGIN
 # ------
 
-createPointFn = (name, address, lat, lng, code) ->
+createPointFn = (id, name, address, lat, lng, code) ->
     Point.create
+        id: id
         name: name
         address: address
         lat: lat
@@ -28,10 +29,10 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
         fn = (point) -> return ->
             point.name or= 'Unnamed Point'
 
-            # is address defined?
-            if point.address
-                createPointFn point.name, point.address, point.lat, point.lng, point.code
-                return
+            # is address defined we don't use it
+            # if point.address
+            #     createPointFn point.name, point.address, point.lat, point.lng, point.code
+            #     return
 
             # reverse geocoding using google
             geocodeUrl = net.google.geocodeUrlFn point.lat, point.lng, net.google.apikey
@@ -43,7 +44,7 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
                 if res.statusCode isnt 200
                     logger.error "    API ERROR #{res.statusCode}".red
                     address = 'Undefined address (API error)'
-                    createPointFn point.name, address, point.lat, point.lng, point.code
+                    createPointFn point.id, point.name, address, point.lat, point.lng, point.code
                     return
 
                 # no error - parsing results
@@ -56,7 +57,7 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Point.drop().the
                     logger.info "    #{address}"
 
                 # save point in db
-                createPointFn point.name, address, point.lat, point.lng, point.code
+                createPointFn point.id, point.name, address, point.lat, point.lng, point.code
 
         # delay
         setTimeout fn(point), (waitInc += net.google.geocodeDelay)
