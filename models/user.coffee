@@ -37,11 +37,10 @@ User = db.orm.define 'User',
             isUnique: checkUnique
             isNotNull: checkNotNull
     email:
-        type: Sequelize.STRING 25
+        type: Sequelize.STRING
         unique: true
         allowNull: false
         validate:
-            len: [3, 25]
             isUnique: checkUnique
             isNotNull: checkNotNull
     password:
