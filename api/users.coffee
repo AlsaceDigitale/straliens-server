@@ -43,7 +43,7 @@ module.exports = (app) ->
             return
         User.count where: teamId: value
         .then (ammount) ->
-            if ammount and ammount => 10
+            if ammount and ammount >= 10
                 res.validationError fields: [
                     path: 'teamId'
                     message: 'L\'équipe a atteint la limite de joueurs'
