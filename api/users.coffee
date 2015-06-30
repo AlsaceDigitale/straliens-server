@@ -41,8 +41,8 @@ module.exports = (app) ->
                 message: 'Aucune équipe n\'a été spécifiée'
             ]
             return
-        User.count where: teamId: value
-        .then (ammount) ->
+        User.count where: teamId: req.body.teamId
+        .then (amount) ->
             if amount and amount >= 10
                 res.validationError fields: [
                     path: 'teamId'
