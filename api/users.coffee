@@ -34,8 +34,23 @@ module.exports = (app) ->
                 message: 'Le mot de passe doit faire au moins 5 caractères'
             ]
             return
-        # hash the password
-        bcrypt.hash req.body.password, 8, (err, hash) ->
+        # check if team size limit is not reached
+        if not req.body.teamId or req.body.teamId == null
+            res.validationError fields: [
+                path: 'teamId'
+                message: 'Aucune équipe n\'a été spécifiée'
+            ]
+            return
+        User.count where: teamId: value
+        .then (ammount) ->
+            if ammount and ammount => 10
+                res.validationError fields: [
+                    path: 'teamId'
+                    message: 'L\'équipe a atteint la limite de joueurs'
+                ]
+                return
+            # hash the password
+            bcrypt.hash req.body.password, 8, (err, hash) ->
             req.body.password = hash
             # now try to build the entity
             res.buildModelOrFail User, req.body, (user) ->
@@ -44,6 +59,13 @@ module.exports = (app) ->
                     res.status 201
                     res.set 'Location', res.url 'users.get', id: user.id
                     res.json formatUser(user)
+        .catch (err) ->
+            res.validationError fields: [
+                path: 'teamId'
+                message: 'L\'équipe a atteint la limite de joueurs'
+            ]
+            return
+
 
 
 # METHODS
