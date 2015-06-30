@@ -21,7 +21,7 @@ addSession = (app, io) ->
 
 # enable middlewares
 addThirdPartyMiddlewares = (app) ->
-    app.use cors credentials: true
+    app.use cors credentials: true, origin: [/straliens\.eu/, /localhost:.*/]
     app.use bodyParser.urlencoded extended: true
     # extend express and routing
     router = new Router
