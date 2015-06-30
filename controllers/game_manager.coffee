@@ -13,10 +13,12 @@ constants = require '../config/constants'
 
 
 class GameManager
-    onPointCheckin: (game, gameUser, gameTeam, cb) ->
+    onPointCheckin: (game, gameUser, gameTeam, gamePoint, cb) ->
         console.log "manager: Point checkin gameUser #{gameUser.id} gameTeam #{gameTeam.id}"
         userScoreUpd = "score + #{constants.score.checkPoint.user}"
         teamScoreUpd = "score + #{constants.score.checkPoint.team}"
+
+        @onGamePointChange gamePoint
 
         GameUser.update score: Sequelize.literal(userScoreUpd),
             where:
@@ -36,6 +38,10 @@ class GameManager
                     .done (gameTeam) ->
                         ws.sendToUser id: gameUser.userId, "score:update", gameUser.score, gameTeam.score
                         cb gameUser, gameTeam
+
+    onGamePointChange: (gamePoint) ->
+        gamePoint.getPoint().then (point) ->
+            ws.broadcast "point:update", gamePoint: gamePoint, point: point
 
 
 #export

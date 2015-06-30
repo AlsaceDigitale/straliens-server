@@ -60,6 +60,12 @@ class GameController
                 @getGamePoint point.dataValues, currentGame, (gamePoint) =>
                     GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
                         where: id: gamePoint.id
+                    .done ->
+                        GamePoint.findOne
+                            where: id: gamePoint.id
+                        .done (gamePoint) ->
+                            gameManager.onGamePointChange gamePoint
+
 
     assignTeams: =>
         logger.info 'controller: Assign teams'
@@ -138,7 +144,7 @@ class GameController
                         GamePoint.find
                             id: gamePoint.id
                         .done (gamePoint) ->
-                            gameManager.onPointCheckin game, gameUser, gameTeam, (gameUser, gameTeam) ->
+                            gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
 
 
