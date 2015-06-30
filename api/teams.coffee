@@ -29,4 +29,5 @@ module.exports = (app) ->
 
 formatTeam = (team) ->
     result = team
+    delete result.dataValues.password
     return result
