@@ -1,7 +1,6 @@
 # modules
 socketIo = require 'socket.io'
 events = require 'events'
-
 logger = require '../services/logger'
 
 class WebSockets extends events.EventEmitter
@@ -23,14 +22,13 @@ class WebSockets extends events.EventEmitter
             # if the client isn't authenticated, do not continue
             unless socket.user then return
             # register the user
-            @emit 'connection.authenticated', socket
             @users[socket.user.id] = {} if not @users[socket.user.id]
             @users[socket.user.id][socket.id] = socket
             # register the team
             if socket.user.teamId
                 @teams[socket.user.teamId] = {} if not @teams[socket.user.teamId]
                 @teams[socket.user.teamId][socket.id] = socket
-
+            @emit 'connection.authenticated', socket
             socket.on 'disconnect', =>
                 delete @users[socket.user.id][socket.id]
                 delete @teams[socket.user.teamId][socket.id]
@@ -61,7 +59,13 @@ class WebSockets extends events.EventEmitter
     sendToTeam: (team, action, datas...) =>
         for id, socket of @teams[team.id]
             socket.emit action, datas...
-
+    
+    # send a message to all users, except the sender
+    sendToUsers: (user, action, datas...) =>
+        for usr in @users
+            if usr.id != user.id
+                for socket of usr
+                    socket.emit action, datas...
 
 # export
 module.exports = new WebSockets
