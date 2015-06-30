@@ -56,7 +56,6 @@ class GameController
         pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
         @currentGame (currentGame) =>
             Point.find({}).done (point) =>
-                console.log "Point #{point}"
                 if !point or !currentGame then return
                 @getGamePoint point.dataValues, currentGame, (gamePoint) =>
                     GamePoint.update energy: Sequelize.literal(pointEnergyUpd),

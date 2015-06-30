@@ -1,5 +1,7 @@
 # modules
 Sequelize = require 'sequelize'
+ws = require '../websockets/websockets'
+
 # models
 Game = require '../models/game'
 Point = require '../models/point'
@@ -12,28 +14,27 @@ constants = require '../config/constants'
 
 class GameManager
     onPointCheckin: (game, gameUser, gameTeam, cb) ->
-        console.log "manager: Point checkin #{gameUser} #{gameTeam}"
+        console.log "manager: Point checkin gameUser #{gameUser.id} gameTeam #{gameTeam.id}"
         userScoreUpd = "score + #{constants.score.checkPoint.user}"
         teamScoreUpd = "score + #{constants.score.checkPoint.team}"
 
         GameUser.update score: Sequelize.literal(userScoreUpd),
             where:
-                userId: gameUser.id
-                gameId: game.id
+                id: gameUser.id
         .done ->
             GameTeam.update score: Sequelize.literal(teamScoreUpd),
                 where:
-                    teamId: gameTeam.id
-                    gameId: game.id
+                    id: gameTeam.id
             .done ->
-                GameUser.find
-                    userId: gameUser.id
-                    gameId: game.id
+                GameUser.findOne
+                    where:
+                        id: gameUser.id
                 .done (gameUser) ->
-                    GameTeam.find
-                        teamId: gameTeam.id
-                        gameId: game.id
+                    GameTeam.findOne
+                        where:
+                            id: gameTeam.id
                     .done (gameTeam) ->
+                        ws.sendToUser id: gameUser.userId, "score:update", gameUser.score, gameTeam.score
                         cb gameUser, gameTeam
 
 

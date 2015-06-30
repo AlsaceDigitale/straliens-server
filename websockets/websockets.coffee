@@ -2,6 +2,7 @@
 socketIo = require 'socket.io'
 events = require 'events'
 
+logger = require '../services/logger'
 
 class WebSockets extends events.EventEmitter
     # socket.io object
@@ -44,6 +45,7 @@ class WebSockets extends events.EventEmitter
     # if you only have the id, call it in this way:
     # sendToUser id: myId, action, data
     sendToUser: (user, action, datas...) =>
+        logger.info "websockets: sendToUser #{user.id}"
         for id, socket of @users[user.id]
             socket.emit action, datas...
 
