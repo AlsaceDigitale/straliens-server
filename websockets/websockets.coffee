@@ -59,13 +59,14 @@ class WebSockets extends events.EventEmitter
     sendToTeam: (team, action, datas...) =>
         for id, socket of @teams[team.id]
             socket.emit action, datas...
-    
+
     # send a message to all users, except the sender
-    sendToUsers: (user, action, datas...) =>
-        for usr in @users
-            if usr.id != user.id
-                for socket of usr
+    sendToUsers: (sender, action, datas...) =>
+        for user of @users
+            if parseInt(user) != parseInt(sender.id)
+                for id, socket of @users[user]
                     socket.emit action, datas...
+
 
 # export
 module.exports = new WebSockets
