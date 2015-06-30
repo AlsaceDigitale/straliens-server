@@ -14,6 +14,9 @@ module.exports = (app) ->
     points = require './points'
     points app
 
+    games = require './games'
+    games app
+
 # utiliser l'app en parametre et pas un router
 #    teams = require './teams'
 #    teams app
