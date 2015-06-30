@@ -20,9 +20,10 @@ module.exports = (app) ->
 
     # GET /api/points/:id/check
     app.get '/api/points/:code/check', (req, res) ->
-        console.log "/points/check/#{req.params.code} user: #{req.query.user_id}"
+        return unless req.checkAuthentication()
+        console.log "/points/check/#{req.params.code} user: #{req.session.user.id}"
         User.findOne
-            where: id: req.query.user_id
+            where: id: req.session.user.id
         .done (user) ->
             GameController.currentGame (current_game) ->
                 Point.findOne
