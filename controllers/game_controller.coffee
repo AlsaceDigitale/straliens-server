@@ -45,11 +45,19 @@ class GameController
         logger.info 'controller: Managing energy for users'
         userEnergyUpd = "LEAST(#{constants.energy.user.maxValue}, energy + #{constants.energy.user.value})"
         @currentGame (currentGame) =>
-            User.find({}).done (user) =>
-                if !user or !currentGame then return
-                @getGameUser currentGame, user.dataValues, (gameUser) ->
-                    GameUser.update energy: Sequelize.literal(userEnergyUpd),
-                        where: id: gameUser.id
+            User.findAll()
+            .done (users) =>
+                if !users or !currentGame then return
+                for user in users
+                    console.log user
+                    @getGameUser currentGame, user.dataValues, (gameUser) ->
+                        GameUser.update energy: Sequelize.literal(userEnergyUpd),
+                            where: id: gameUser.id
+                        .done ->
+                            GameUser.findOne
+                                where: id: gameUser.id
+                            .done (gameUser) ->
+                                gameManager.onGameUserChange gameUser
 
     manageEnergyPoint: =>
         logger.info 'controller: Managing energy for points'
@@ -60,6 +68,12 @@ class GameController
                 @getGamePoint point.dataValues, currentGame, (gamePoint) =>
                     GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
                         where: id: gamePoint.id
+                    .done ->
+                        GamePoint.findOne
+                            where: id: gamePoint.id
+                        .done (gamePoint) ->
+                            gameManager.onGamePointChange gamePoint
+
 
     assignTeams: =>
         logger.info 'controller: Assign teams'
@@ -138,7 +152,7 @@ class GameController
                         GamePoint.find
                             id: gamePoint.id
                         .done (gamePoint) ->
-                            gameManager.onPointCheckin game, gameUser, gameTeam, (gameUser, gameTeam) ->
+                            gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
 
 
