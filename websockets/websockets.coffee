@@ -36,27 +36,27 @@ class WebSockets extends events.EventEmitter
 
     # sends a message to ALL, even the
     # not authenticated connections.
-    broadcast: (action, datas...) ->
+    broadcast: (action, datas...) =>
         @io.emit action, datas...
 
     # sends a message to an user.
     # 'user' argument is a Sequelize user.
     # if you only have the id, call it in this way:
     # sendToUser id: myId, action, data
-    sendToUser: (user, action, datas...) ->
+    sendToUser: (user, action, datas...) =>
         for id, socket of @users[user.id]
             socket.emit action, datas...
 
     # send a message to a team, using an user
     # 'user' argument is a Sequelize user
-    sendToUserTeam: (user, action, datas...) ->
+    sendToUserTeam: (user, action, datas...) =>
         unless user.teamId then return
         for id, socket of @teams[user.teamId]
             socket.emit action, datas...
 
     # send a message to a team
     # 'team' argument is a Sequelize team
-    sendToTeam: (team, action, datas...) ->
+    sendToTeam: (team, action, datas...) =>
         for id, socket of @teams[team.id]
             socket.emit action, datas...
 
