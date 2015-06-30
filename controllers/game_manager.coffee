@@ -43,6 +43,9 @@ class GameManager
         gamePoint.getPoint().then (point) ->
             ws.broadcast "point:update", gamePoint: gamePoint, point: point
 
+    onGameUserChange: (gameUser) ->
+        ws.sendToUser id: gameUser.userId, "user:update", energy: gameUser.energy
+
 
 #export
 module.exports = new GameManager
