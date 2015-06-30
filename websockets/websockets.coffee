@@ -1,7 +1,9 @@
 # modules
 socketIo = require 'socket.io'
+events = require 'events'
 
-class WebSockets
+
+class WebSockets extends events.EventEmitter
     # socket.io object
     io: null
     users: {}
@@ -15,6 +17,7 @@ class WebSockets
     # and handles multiple connections by user
     handleConnection: ->
         @io.on 'connection', (socket) =>
+            @emit 'connection', socket
             socket.user = socket.handshake.session.user
             # if the client isn't authenticated, do not continue
             unless socket.user then return
@@ -59,14 +62,3 @@ class WebSockets
 
 # export
 module.exports = new WebSockets
-
-# Message : {
-#   type: "message|notif"
-#   to: "public|team|side",
-#    msg: "content of message",
-#    author: {
-#        id: "ID",
-#        user: "Username"
-#    },
-#    cDate: "Datetime",
-#}
