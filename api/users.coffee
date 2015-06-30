@@ -62,7 +62,7 @@ module.exports = (app) ->
         .catch (err) ->
             res.validationError fields: [
                 path: 'teamId'
-                message: 'L\'équipe a atteint la limite de joueurs'
+                message: err
             ]
             return
 
