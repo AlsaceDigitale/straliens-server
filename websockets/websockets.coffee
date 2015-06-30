@@ -22,6 +22,7 @@ class WebSockets extends events.EventEmitter
             # if the client isn't authenticated, do not continue
             unless socket.user then return
             # register the user
+            @emit 'connection.authenticated', socket
             @users[socket.user.id] = {} if not @users[socket.user.id]
             @users[socket.user.id][socket.id] = socket
             # register the team
