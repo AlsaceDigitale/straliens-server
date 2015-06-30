@@ -41,9 +41,9 @@ module.exports = (app) ->
                 message: 'Aucune équipe n\'a été spécifiée'
             ]
             return
-        User.count where: teamId: value
-        .then (ammount) ->
-            if ammount and ammount => 10
+        User.count where: teamId: req.body.teamId
+        .then (amount) ->
+            if amount and amount >= 10
                 res.validationError fields: [
                     path: 'teamId'
                     message: 'L\'équipe a atteint la limite de joueurs'
@@ -51,18 +51,18 @@ module.exports = (app) ->
                 return
             # hash the password
             bcrypt.hash req.body.password, 8, (err, hash) ->
-            req.body.password = hash
-            # now try to build the entity
-            res.buildModelOrFail User, req.body, (user) ->
-                # now, refresh data (for more coherent types in API responses)
-                selectUserFromReq user.id, req, (user) ->
-                    res.status 201
-                    res.set 'Location', res.url 'users.get', id: user.id
-                    res.json formatUser(user)
+                req.body.password = hash
+                # now try to build the entity
+                res.buildModelOrFail User, req.body, (user) ->
+                    # now, refresh data (for more coherent types in API responses)
+                    selectUserFromReq user.id, req, (user) ->
+                        res.status 201
+                        res.set 'Location', res.url 'users.get', id: user.id
+                        res.json formatUser(user)
         .catch (err) ->
             res.validationError fields: [
                 path: 'teamId'
-                message: 'L\'équipe a atteint la limite de joueurs'
+                message: err
             ]
             return
 
