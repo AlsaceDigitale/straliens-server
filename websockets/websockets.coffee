@@ -26,8 +26,6 @@ class WebSockets
                 @teams[socket.user.teamId] = {} if not @teams[socket.user.teamId]
                 @teams[socket.user.teamId][socket.id] = socket
 
-            @sendToTeam id: 1, 'message', Object.keys(@users[socket.user.id])
-
             socket.on 'disconnect', =>
                 delete @users[socket.user.id][socket.id]
                 delete @teams[socket.user.teamId][socket.id]
