@@ -28,6 +28,11 @@ module.exports = (app) ->
 # -------
 
 formatTeam = (team) ->
-    result = team
-    result.password = ''
+    result = {}
+    # Do not even ask.
+    result.id = team.id
+    result.name = team.name
+    result.slogan = team.slogan
+    result.createdAt = team.createdAt
+    result.updatedAt = team.updatedAt
     return result
