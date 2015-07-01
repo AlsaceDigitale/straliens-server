@@ -23,13 +23,35 @@ class ChatManager
                 time: date
                 content: data.content
 
+        # client tries to post something to their side chat
+        # TODO not implemented
+        socket.on 'postSideChat', (data)=>
+            return
+#           return unless validateFormat data
+#           date = new Date
+#           ws.sendToUserTeam socket.user, 'sideChat',
+#               type: 'msg'
+#               sender: socket.user
+#               time: date
+#               content: data.content
+
+        # client tries to post something to the support chat
+        # TODO not implemented
+        socket.on 'postSupportChat', (data)=>
+            return
+#           return unless validateFormat data
+#           date = new Date
+#           ws.sendToUserTeam socket.user, 'supportChat',
+#               sender: socket.user
+#               time: date
+#               content: data.content
     # check if the content is right
     validateFormat = (content) ->
         if not content.type or not content.content then return false
         if content.type != 'msg' then return false
         return true
-    # check message for "bad" words
-    # todo
+    # check message for "bad" words, and replaces them
+    # TODO not implemented
     politicalRectifier = (message) ->
         return message
 
