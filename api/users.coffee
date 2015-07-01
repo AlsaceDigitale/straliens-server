@@ -5,6 +5,8 @@ bcrypt = require 'bcrypt'
 User = require '../models/user'
 Team = require '../models/team'
 
+gameController = require '../controllers/game_controller'
+
 
 # CONTROLLER
 # ----------
@@ -16,6 +18,23 @@ module.exports = (app) ->
         User.findAll().then (users) ->
             list.push formatUser(user) for user in users
             res.json list
+
+    app.get '/api/users/me', 'users.me', (req, res) ->
+        return unless req.checkAuthentication()
+        User.findOne
+            where: id: req.session.user.id
+        .done (user) ->
+            gameController.currentGame (game) ->
+                gameController.getGameUser game, user, (gameUser) ->
+                    gameController.getGameUser game, user, (gameUser) ->
+                        gameController.getGameTeamForUser game, user, (gameTeam) ->
+                            res.json
+                                gameTeam: gameTeam
+                                gameUser: gameUser
+                                user: formatUser(user)
+
+
+
 
 
     # GET /api/users/:id
