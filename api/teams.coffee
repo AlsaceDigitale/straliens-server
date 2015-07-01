@@ -29,4 +29,5 @@ module.exports = (app) ->
 
 formatTeam = (team) ->
     result = team
+    result.password = ''
     return result
