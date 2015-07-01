@@ -19,7 +19,7 @@ module.exports = (app) ->
                     email: nickname
             .done (user) ->
                 unless user
-                    res.genericError "Utilisateur #{nickname} n\'existe pas", 'AuthenticationError'
+                    res.genericError "Utilisateur #{nickname} n'existe pas", 'AuthenticationError'
                 else
                     bcrypt.compare password, user.password, (err, same) ->
                         unless same
