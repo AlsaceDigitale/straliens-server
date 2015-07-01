@@ -11,7 +11,7 @@ class ChatManager
                 type: 'msg'
                 sender: socket.user
                 time: date
-                content: 'A nice global message'
+                content: data.content
 
         # client tries to post something to teams chat
         socket.on 'postTeamChat', (data)=>
@@ -21,13 +21,12 @@ class ChatManager
                 type: 'msg'
                 sender: socket.user
                 time: date
-                content: 'A nice team message'
+                content: data.content
 
     # check if the content is right
-    # todo
     validateFormat = (content) ->
-        #if not content.type or not content.date or not content.content
-        #    return false
+        if not content.type or not content.content then return false
+        if content.type != 'msg' then return false
         return true
     # check message for "bad" words
     # todo
