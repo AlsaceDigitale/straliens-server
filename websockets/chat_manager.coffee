@@ -4,20 +4,20 @@ class ChatManager
     # chat handling
     ws.on 'connection.authenticated', (socket) =>
         # client tries to post something to global chat
-        socket.on 'postGlobalChat', (data) =>
+        socket.on 'chat:global:post', (data) =>
             return unless validateFormat data
             date = new Date
-            ws.sendToUserTeam socket.user, 'globalChat',
+            ws.sendToUserTeam socket.user, 'chat:global:in',
                 type: 'msg'
                 sender: socket.user
                 time: date
                 content: data.content
 
         # client tries to post something to teams chat
-        socket.on 'postTeamChat', (data)=>
+        socket.on 'chat:team:post', (data)=>
             return unless validateFormat data
             date = new Date
-            ws.sendToUserTeam socket.user, 'teamChat',
+            ws.sendToUserTeam socket.user, 'chat:team:in',
                 type: 'msg'
                 sender: socket.user
                 time: date
@@ -25,11 +25,11 @@ class ChatManager
 
         # client tries to post something to their side chat
         # TODO not implemented
-        socket.on 'postSideChat', (data)=>
+        socket.on 'chat:side:post', (data)=>
             return
 #           return unless validateFormat data
 #           date = new Date
-#           ws.sendToUserTeam socket.user, 'sideChat',
+#           ws.sendToUserTeam socket.user, 'chat:side:in',
 #               type: 'msg'
 #               sender: socket.user
 #               time: date
@@ -37,11 +37,11 @@ class ChatManager
 
         # client tries to post something to the support chat
         # TODO not implemented
-        socket.on 'postSupportChat', (data)=>
+        socket.on 'chat:support:post', (data)=>
             return
 #           return unless validateFormat data
 #           date = new Date
-#           ws.sendToUserTeam socket.user, 'supportChat',
+#           ws.sendToUserTeam socket.user, 'chat:support:in',
 #               sender: socket.user
 #               time: date
 #               content: data.content
