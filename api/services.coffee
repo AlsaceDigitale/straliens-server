@@ -11,7 +11,7 @@ module.exports = (app) ->
         {nickname, password} = req.body
         # check the password
         if not nickname? or not password?
-            res.genericError 'Missing parameters', 'AuthenticationError'
+            res.genericError 'Paramètres invalides', 'AuthenticationError'
         else
             User.findOne
                 where: $or:
@@ -19,11 +19,11 @@ module.exports = (app) ->
                     email: nickname
             .done (user) ->
                 unless user
-                    res.genericError "User #{nickname} does not exists", 'AuthenticationError'
+                    res.genericError "Utilisateur #{nickname} n'existe pas", 'AuthenticationError'
                 else
                     bcrypt.compare password, user.password, (err, same) ->
                         unless same
-                            res.genericError "Invalid password for user #{nickname}", 'AuthenticationError'
+                            res.genericError "Mot de passe invalide pour #{nickname}", 'AuthenticationError'
                         else
                             req.session.user = user.dataValues
                             selectUserFromReq user.id, req, (user) ->

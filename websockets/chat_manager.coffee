@@ -14,7 +14,7 @@ class ChatManager
                 content: data.content
 
         # client tries to post something to teams chat
-        socket.on 'chat:team:post', (data)=>
+        socket.on 'chat:team:post', (data) =>
             return unless validateFormat data
             date = new Date
             ws.sendToUserTeam socket.user, 'chat:team:in',
@@ -25,7 +25,7 @@ class ChatManager
 
         # client tries to post something to their side chat
         # TODO not implemented
-        socket.on 'chat:side:post', (data)=>
+        socket.on 'chat:side:post', (data) =>
             return
 #           return unless validateFormat data
 #           date = new Date
@@ -37,7 +37,7 @@ class ChatManager
 
         # client tries to post something to the support chat
         # TODO not implemented
-        socket.on 'chat:support:post', (data)=>
+        socket.on 'chat:support:post', (data) =>
             return
 #           return unless validateFormat data
 #           date = new Date
