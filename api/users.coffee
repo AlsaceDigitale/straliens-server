@@ -2,8 +2,11 @@
 _ = require 'underscore'
 _.mixin require 'underscore.deepclone'
 bcrypt = require 'bcrypt'
+gameController = require '../controllers/game_controller'
+# models
 User = require '../models/user'
 Team = require '../models/team'
+GameTeam = require '../models/game_team'
 
 
 # CONTROLLER
@@ -77,6 +80,24 @@ module.exports = (app) ->
                     message: err
                 ]
                 return
+
+
+    # GET /api/users/:id/side
+    app.get '/api/users/:id/side', 'users.get.side.get', (req, res) ->
+        selectUserFromReq req.params.id, req, (user) ->
+            unless user then res.notFoundError()
+            else
+                gameController.currentGame (game) ->
+                    unless game then res.notFoundError()
+                    else
+                        GameTeam.findOne
+                            where:
+                                teamId: user.teamId
+                                gameId: game.id
+                        .then (gameTeam) ->
+                            unless gameTeam then res.notFoundError()
+                            else
+                                res.json gameTeam.side
 
 
 
