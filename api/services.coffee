@@ -29,6 +29,11 @@ module.exports = (app) ->
                             selectUserFromReq user.id, req, (user) ->
                                 res.json formatUser(user)
 
+    # GET /api/services/logged-in
+    app.get '/api/services/logged-in', 'services.logged-in.get', (req, res) ->
+        res.json req.session.user?
+
+
 formatUser = (user) ->
     result = user
     delete result.dataValues.password
