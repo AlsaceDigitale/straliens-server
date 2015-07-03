@@ -1,13 +1,13 @@
 module.exports =
     score: checkPoint:
-        team: 10
-        user: 5
+        team: 1
+        user: 10
     energy:
         user:
-            frequencyMs: 15000
+            frequencyMs: 20000
             value: 1
-            maxValue: 15
+            maxValue: 30
         point:
-            frequencyMs: 10000
+            frequencyMs: 180000
             valueDecay: 1
-            maxValue: 100
+            maxValue: 150
