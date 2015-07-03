@@ -26,8 +26,8 @@ module.exports = (app) ->
             useGPS = false
             console.log "/points/check/#{req.params.code} user: #{req.session.user.id} without GPS"
         else
-            lat = req.query.lat
-            lng = req.query.lng
+            lat = parseFloat (req.query.lat).replace(',', '.')
+            lng = parseFloat (req.query.lng).replace(',', '.')
             console.log "/points/check/#{req.params.code} user: #{req.session.user.id} @ lat: #{lat} lng: #{lng}"
 
         User.findOne
