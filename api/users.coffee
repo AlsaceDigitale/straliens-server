@@ -68,7 +68,6 @@ module.exports = (app) ->
                 id: req.body.teamId
                 password: req.body.teamPassword
         .then (count) ->
-            console.log count
             if count == 0
                 res.validationError fields: [
                     path: 'teamPassword'
