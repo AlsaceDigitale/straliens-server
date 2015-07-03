@@ -139,7 +139,7 @@ class GameController
             @getGameUser game, user, (gameUser) =>
                 # Check if coordinates are right
                 if useGPS
-                    if @checkCoordinates(lat, lng, gamePoint.lat, gamePoint.lng, 15000) == false
+                    if @checkCoordinates(lat, lng, point.dataValues.lat, point.dataValues.lng, 200) == false
                         console.log "Rejecting checkin of point #{point.id} with coords #{lat} #{lng} by user #{user.id}"
                         return
                 @getGameTeamForUser game, user, (gameTeam) ->
@@ -170,10 +170,6 @@ class GameController
     checkCoordinates: (uLat, uLng, tLat, tLng, delta) ->
         return false unless delta > 0
         earthRadius = 6372.8 # Km
-        uLat =  parseFloat (uLat).replace(',', '.')
-        uLng = parseFloat (uLng).replace(',', '.')
-        tLat = parseFloat (tLat).replace(',', '.')
-        tLng = parseFloat (tLng).replace(',', '.')
         uLat = uLat/180 * Math.PI
         uLng = uLng/180 * Math.PI
         tLat = tLat/180 * Math.PI
