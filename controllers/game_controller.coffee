@@ -62,16 +62,18 @@ class GameController
         logger.info 'controller: Managing energy for points'
         pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
         @currentGame (currentGame) =>
-            Point.find({}).done (point) =>
-                if !point or !currentGame then return
-                @getGamePoint point.dataValues, currentGame, (gamePoint) =>
-                    GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
-                        where: id: gamePoint.id
-                    .done ->
-                        GamePoint.findOne
+            Point.findAll({}).done (points) =>
+                if !points or !currentGame then return
+                for point in points
+                    @getGamePoint point.dataValues, currentGame, (gamePoint) =>
+                        console.log "gamePoint #{gamePoint.id}"
+                        GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
                             where: id: gamePoint.id
-                        .done (gamePoint) ->
-                            gameManager.onGamePointChange gamePoint
+                        .done ->
+                            GamePoint.findOne
+                                where: id: gamePoint.id
+                            .done (gamePoint) ->
+                                gameManager.onGamePointChange gamePoint
 
 
     assignTeams: =>
@@ -150,7 +152,8 @@ class GameController
                             id: gamePoint.id
                     .done =>
                         GamePoint.find
-                            id: gamePoint.id
+                            where:
+                                id: gamePoint.id
                         .done (gamePoint) ->
                             gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint

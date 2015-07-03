@@ -32,13 +32,6 @@ http.tuneResponses app
 api = require './api'
 api app
 
-
-# EXPOSE LANDING FILES
-# --------------------
-app.use express.static "#{__dirname}/index"
-app.get '/', (req, res) -> res.sendFile '/index.html'
-
-
 # START APPLICATION
 # -----------------
 # start http + websockets

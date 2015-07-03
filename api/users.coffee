@@ -28,7 +28,10 @@ module.exports = (app) ->
             where: id: req.session.user.id
         .done (user) ->
             gameController.currentGame (game) ->
-                gameController.getGameUser game, user, (gameUser) ->
+                if game == null
+                    res.json
+                        user: formatUser(user)
+                else
                     gameController.getGameUser game, user, (gameUser) ->
                         gameController.getGameTeamForUser game, user, (gameTeam) ->
                             res.json
