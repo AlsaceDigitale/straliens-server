@@ -2,244 +2,228 @@
     "points":[
         {
             "id": 1,
-            "name": "",
-            "code": "UEAJFZCM",
-            "lat": 48.5870549,
-            "lng": 7.7464128
-        }, {
+            "code":"G8P3TULX",
+            "name": "La bourse",
+            "lat": 48.5760958,
+            "lng": 7.7541143
+        },
+        {
             "id": 2,
-            "name": "",
-            "code": "4SQK4UUQ",
-            "lat": 48.5818526,
-            "lng": 7.751036899999999
-        }, {
+            "code":"QB352GKM",
+            "name": "Restaurant La bourse",
+            "lat": 48.5759421,
+            "lng": 7.7537813
+        },
+        {
             "id": 3,
-            "name": "",
-            "code": "G8P3TULX",
-            "lat": 48.5827682,
-            "lng": 7.7410269000000005
-        }, {
+            "code":"4SQK4UUQ",
+            "name": "Maison des syndicats",
+            "lat": 48.5769758,
+            "lng": 7.753662
+        },
+        {
             "id": 4,
-            "name": "",
-            "code": "QB352GKM",
-            "lat": 48.5832224,
-            "lng": 7.7533864999999995
-        }, {
+            "code":"VYAD7XHY",
+            "name": "La Chambre",
+            "lat": 48.5777,
+            "lng": 7.7530375
+        },
+        {
             "id": 5,
-            "name": "",
-            "code": "WVC8WDDQ",
-            "lat": 48.5855787,
-            "lng": 7.7477646
-        }, {
+            "code":"98HV62QC",
+            "name": "Green Fleuriste",
+            "lat": 48.5777302,
+            "lng": 7.7530734
+        },
+        {
             "id": 6,
-            "name": "",
-            "code": "2JV3NHL0",
-            "lat": 48.5849542,
-            "lng": 7.741670600000001
-        }, {
+            "code":"SANEVODB",
+            "name": "Cafe berlin",
+            "lat": 48.5780459,
+            "lng": 7.7538754
+        },
+        {
             "id": 7,
-            "name": "",
-            "code": "WK1E6RUN",
-            "lat": 48.581519,
-            "lng": 7.743558900000001
-        }, {
+            "code":"D62D5T4H",
+            "name": "MusicShop",
+            "lat": 48.5789249,
+            "lng": 7.755418
+        },
+        {
             "id": 8,
-            "name": "",
-            "code": "KI6ISVBP",
-            "lat": 48.5835631,
-            "lng": 7.7489877
-        }, {
+            "code":"ZL8CPD69",
+            "name": "Bemac",
+            "lat": 48.5791523,
+            "lng": 7.7503007
+        },
+        {
             "id": 9,
-            "name": "",
-            "code": "D62D5T4H",
-            "lat": 48.5837334,
-            "lng": 7.744245599999999
-        }, {
+            "code":"N42YZ7MC",
+            "name": "La nouvelle douane",
+            "lat": 48.579571,
+            "lng": 7.7511433
+        },
+        {
             "id": 10,
-            "name": "",
-            "code": "IDVWMSOR",
-            "lat": 48.5819165,
-            "lng": 7.747678799999999
-        }, {
+            "code":"VAB1J0BS",
+            "name": "Friperie Leopard",
+            "lat": 48.5820905,
+            "lng": 7.7544993
+        },
+        {
             "id": 11,
-            "name": "",
-            "code": "J897K812",
-            "lat": 48.5834353,
-            "lng": 7.7457047
-        }, {
+            "code":"JH32AW35",
+            "name": "Librairie Cyclops",
+            "lat": 48.583367,
+            "lng": 7.7547346
+        },
+        {
             "id": 12,
-            "name": "",
-            "code": "N6JJU4AP",
-            "lat": 48.5804969,
-            "lng": 7.7499533
-        }, {
+            "code":"Z9MTY8LQ",
+            "name": "Librairie Farfafouille",
+            "lat": 48.583091,
+            "lng": 7.7546442
+        },
+        {
             "id": 13,
-            "name": "",
-            "code": "GAOE5ZAD",
-            "lat": 48.5859194,
-            "lng": 7.750897400000001
-        }, {
+            "code":"V48L070O",
+            "name": "Bar TNS",
+            "lat": 48.5856954,
+            "lng": 7.7554589
+        },
+        {
             "id": 14,
-            "name": "",
-            "code": "WTY5AI3E",
-            "lat": 48.580610500000006,
-            "lng": 7.743344300000001
-        }, {
+            "code":"HX3XC6NE",
+            "name": "Endurance Shop",
+            "lat": 48.5851943,
+            "lng": 7.7561575
+        },
+        {
             "id": 15,
-            "name": "",
-            "code": "QN3C8OJW",
-            "lat": 48.5818313,
-            "lng": 7.754716900000001
-        }, {
+            "code":"16F14QOC",
+            "name": "Café opéra",
+            "lat": 48.585481,
+            "lng": 7.7514256
+        },
+        {
             "id": 16,
-            "name": "",
-            "code": "JBDS1LK3",
-            "lat": 48.5812351,
-            "lng": 7.7405548
-        }, {
+            "code":"DRGWCHGF",
+            "name": "Plage Rivetoile",
+            "lat": 48.5727592,
+            "lng": 7.7609664
+        },
+        {
             "id": 17,
-            "name": "",
-            "code": "2WL1KMHD",
-            "lat": 48.5798723,
-            "lng": 7.7444172
-        }, {
+            "code":"WK1E6RUN",
+            "name": "Café UGC",
+            "lat": 48.5734628,
+            "lng": 7.762685
+        },
+        {
             "id": 18,
-            "name": "",
-            "code": "I0H0B93G",
-            "lat": 48.579418,
-            "lng": 7.7468634
-        }, {
+            "code":"2JV3NHL0",
+            "name": "Shadok",
+            "lat": 48.5734899,
+            "lng": 7.7628695
+        },
+        {
             "id": 19,
-            "name": "",
-            "code": "O8P2U16Z",
-            "lat": 48.5847554,
-            "lng": 7.73592
-        }, {
+            "code":"92TAX99J",
+            "name": "Ccci",
+            "lat": 48.5812325,
+            "lng": 7.7485552
+        },
+        {
             "id": 20,
-            "name": "",
-            "code": "P2V90ARG",
-            "lat": 48.58526640000001,
-            "lng": 7.752742799999999
-        }, {
+            "code":"MOHQ6NSB",
+            "name": "Oncle Tom",
+            "lat": 48.5811965,
+            "lng": 7.7456002
+        },
+        {
             "id": 21,
-            "name": "",
-            "code": "92TAX99J",
-            "lat": 48.58407410000001,
-            "lng": 7.7501249
-        }, {
+            "code":"68CIHL4Y",
+            "name": "Creux house",
+            "lat": 48.5816398,
+            "lng": 7.7438461
+        },
+        {
             "id": 22,
-            "name": "",
-            "code": "68CIHL4Y",
-            "lat": 48.5846135,
-            "lng": 7.7459192
-        }, {
+            "code":"JBDS1LK3",
+            "name": "Artichaut",
+            "lat": 48.5822528,
+            "lng": 7.7412949
+        },
+        {
             "id": 23,
-            "name": "",
-            "code": "K1KC8RFE",
-            "lat": 48.58526640000001,
-            "lng": 7.754631000000001
-        }, {
+            "code":"QN3C8OJW",
+            "name": "Tibet bleu",
+            "lat": 48.5824932,
+            "lng": 7.7401838
+        },
+        {
             "id": 24,
-            "name": "",
-            "code": "VAB1J0BS",
-            "lat": 48.5847838,
-            "lng": 7.7615404
-        }, {
+            "code":"GAOE5ZAD",
+            "name": "Gare",
+            "lat": 48.5843011,
+            "lng": 7.7352229
+        },
+        {
             "id": 25,
-            "name": "",
-            "code": "SANEVODB",
-            "lat": 48.5793328,
-            "lng": 7.7588367
-        }, {
+            "code":"WTY5AI3E",
+            "name": "Filcordo",
+            "lat": 48.5837743,
+            "lng": 7.7375207
+        },
+        {
             "id": 26,
-            "name": "",
-            "code": "16F14QOC",
-            "lat": 48.5784527,
-            "lng": 7.755918500000001
-        }, {
+            "code":"2WL1KMHD",
+            "name": "Assentec",
+            "lat": 48.5848123,
+            "lng": 7.738763
+        },
+        {
             "id": 27,
-            "name": "",
-            "code": "JH32AW35",
-            "lat": 48.5783675,
-            "lng": 7.7617979
-        }, {
+            "code":"KI6ISVBP",
+            "name": "Bric Electronic",
+            "lat": 48.5851505,
+            "lng": 7.7401617
+        },
+        {
             "id": 28,
-            "name": "",
-            "code": "Z9MTY8LQ",
-            "lat": 48.5788218,
-            "lng": 7.751240700000001
-        }, {
+            "code":"UEAJFZCM",
+            "name": "Boutique Orange",
+            "lat": 48.5828328,
+            "lng": 7.7454931
+        },
+        {
             "id": 29,
-            "name": "",
-            "code": "ZL8CPD69",
-            "lat": 48.5810363,
-            "lng": 7.760381700000001
-        }, {
+            "code":"A1QG98V5",
+            "name": "Odyssee",
+            "lat": 48.582207,
+            "lng": 7.7460045
+        },
+        {
             "id": 30,
-            "name": "",
-            "code": "A1QG98V5",
-            "lat": 48.5871401,
-            "lng": 7.7538156
-        }, {
+            "code":"J897K812",
+            "name": "Oxfam",
+            "lat": 48.5800759,
+            "lng": 7.7473867
+        },
+        {
             "id": 31,
-            "name": "",
-            "code": "HX3XC6NE",
-            "lat": 48.5833643,
-            "lng": 7.7589226
-        }, {
+            "code":"WVC8WDDQ",
+            "name": "Mediatheque",
+            "lat": 48.5744991,
+            "lng": 7.7584861
+        },
+        {
             "id": 32,
-            "name": "",
-            "code": "V48L070O",
-            "lat": 48.581377,
-            "lng": 7.758150100000001
-        }, {
-            "id": 33,
-            "name": "",
-            "code": "83YXX41L",
-            "lat": 48.5821436,
-            "lng": 7.759823800000001
-        }, {
-            "id": 34,
-            "name": "",
-            "code": "VYAD7XHY",
-            "lat": 48.5802698,
-            "lng": 7.756948500000001
-        }, {
-            "id": 35,
-            "name": "",
-            "code": "98HV62QC",
-            "lat": 48.5813699,
-            "lng": 7.7621305
-        }, {
-            "id": 36,
-            "name": "",
-            "code": "NRCUPI85",
-            "lat": 48.5791909,
-            "lng": 7.761207800000001
-        }, {
-            "id": 37,
-            "name": "",
-            "code": "N42YZ7MC",
-            "lat": 48.578907,
-            "lng": 7.7664328
-        }, {
-            "id": 38,
-            "name": "",
-            "code": "DRGWCHGF",
-            "lat": 48.5768059,
-            "lng": 7.756991400000001
-        }, {
-            "id": 39,
-            "name": "",
-            "code": "IXLEXK9T",
-            "lat": 48.57439240000001,
-            "lng": 7.7589226
-        }, {
-            "id": 40,
-            "name": "",
-            "code": "MOHQ6NSB",
-            "lat": 48.5738245,
-            "lng": 7.7652311
+            "code": "",
+            "type": "cathedrale",
+            "name": "Cathedrale",
+            "lat": 48.581833,
+            "lng": 7.750796
         }
     ]
 }
