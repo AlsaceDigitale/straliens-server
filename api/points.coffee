@@ -22,13 +22,14 @@ module.exports = (app) ->
     app.get '/api/points/:code/check', (req, res) ->
         return unless req.checkAuthentication()
         useGPS = true
-        if !req.params.lat  || !req.params.lng
+        if !req.query.lat  || !req.query.lng
             useGPS = false
+            console.log "/points/check/#{req.params.code} user: #{req.session.user.id} without GPS"
         else
-            lat = req.params.lat
-            lng = req.params.lng
+            lat = req.query.lat
+            lng = req.query.lng
+            console.log "/points/check/#{req.params.code} user: #{req.session.user.id} @ lat: #{lat} lng: #{lng}"
 
-        console.log "/points/check/#{req.params.code} user: #{req.session.user.id} @ lat: #{lat} lng: #{lng}"
         User.findOne
             where: id: req.session.user.id
         .done (user) ->

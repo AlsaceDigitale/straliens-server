@@ -139,7 +139,9 @@ class GameController
             @getGameUser game, user, (gameUser) =>
                 # Check if coordinates are right
                 if useGPS
-                    if @checkCoordinates(lat, lng, gamePoint.lat, gamePoint.lng, 150) == false then return
+                    if @checkCoordinates(lat, lng, gamePoint.lat, gamePoint.lng, 15000) == false
+                        console.log "Rejecting checkin of point #{point.id} with coords #{lat} #{lng} by user #{user.id}"
+                        return
                 @getGameTeamForUser game, user, (gameTeam) ->
                     GameUser.update
                         energy: 0
@@ -176,6 +178,7 @@ class GameController
         rLng = (tLng - uLng)
         a = Math.sin(rLat / 2) * Math.sin(rLat / 2) + Math.sin(rLng / 2) * Math.sin(rLng / 2) * Math.cos(uLat) * Math.cos(tLat)
         d = (earthRadius * 2 * Math.asin(Math.sqrt(a))) * 1000 # d is the measured distance with the point, in meter
+        console.log "distance is #{d}"
         if d <= delta
             return true
         else
