@@ -133,10 +133,13 @@ class GameController
         .done (gameTeam) ->
             cb gameTeam[0]
 
-    checkPoint: (user, game, point, cb) ->
+    checkPoint: (user, game, point, lat, lng, useGPS, cb) ->
         logger.info "controller: Point check gid=#{game.id} pid=#{point.id} uid=#{user.id}"
         @getGamePoint point, game, (gamePoint) =>
             @getGameUser game, user, (gameUser) =>
+                # Check if coordinates are right
+                if useGPS
+                    if @checkCoordinates(lat, lng, gamePoint.lat, gamePoint.lng, 150) == false then return
                 @getGameTeamForUser game, user, (gameTeam) ->
                     GameUser.update
                         energy: 0
@@ -158,6 +161,25 @@ class GameController
                             gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
 
+    # Checks if coordinates are inside radius of a point
+    # uLat, uLng are the coordinates of the moving point
+    # tLat, tLng are the coordinates of the fixed target.
+    # delta is the radius around the fixed target where we consider we are in range (In meter)
+    checkCoordinates: (uLat, uLng, tLat, tLng, delta) ->
+        return false unless delta > 0
+        earthRadius = 6372.8 # Km
+        uLat = uLat/180 * Math.PI
+        uLng = uLng/180 * Math.PI
+        tLat = tLat/180 * Math.PI
+        tLng = tLng/180 * Math.PI
+        rLat = (tLat - uLat)
+        rLng = (tLng - uLng)
+        a = Math.sin(rLat / 2) * Math.sin(rLat / 2) + Math.sin(rLng / 2) * Math.sin(rLng / 2) * Math.cos(uLat) * Math.cos(tLat)
+        d = (earthRadius * 2 * Math.asin(Math.sqrt(a))) * 1000 # d is the measured distance with the point, in meter
+        if d <= delta
+            return true
+        else
+            return false
 
 # export
 module.exports = new GameController

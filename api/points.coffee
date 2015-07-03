@@ -21,7 +21,14 @@ module.exports = (app) ->
     # GET /api/points/:id/check
     app.get '/api/points/:code/check', (req, res) ->
         return unless req.checkAuthentication()
-        console.log "/points/check/#{req.params.code} user: #{req.session.user.id}"
+        useGPS = true
+        if !req.params.lat  || !req.params.lng
+            useGPS = false
+        else
+            lat = req.params.lat
+            lng = req.params.lng
+
+        console.log "/points/check/#{req.params.code} user: #{req.session.user.id} @ lat: #{lat} lng: #{lng}"
         User.findOne
             where: id: req.session.user.id
         .done (user) ->
@@ -29,7 +36,7 @@ module.exports = (app) ->
                 Point.findOne
                     where: code: req.params.code
                 .done (point) ->
-                    GameController.checkPoint user, current_game, point, (game_user, game_team, game_point) ->
+                    GameController.checkPoint user, current_game, point, lat, lng, useGPS,(game_user, game_team, game_point) ->
                         res.json
                             game_user: game_user
                             game_team: game_team
