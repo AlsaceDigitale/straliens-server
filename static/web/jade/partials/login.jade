@@ -1,0 +1,19 @@
+.overlay
+    .login
+        .wrapper.col-xs-12.col-sm-6.col-sm-offset-3
+            form
+                .form-group
+                    label(for='nickname') Nom d'utilisateur
+                    input#firstname.form-control(type='text', name='nickname', ng-model='nickname', placeholder='Nom d\'utilisateur' required='')
+                .form-group
+                    label(for='password') Mot de passe
+                    input#email.form-control(
+                        type='password',
+                        name='password',
+                        ng-model='password',
+                        placeholder='Tapez votre mot de passe',
+                        ng-class="{error: error}"
+                        ng-change="error = false"
+                        required='')
+                button.btn.btn-success.btn-fw(ng-click="validate(this)") Valider
+            button.btn.btn-primary.btn-fw.signup(ui-sref="signup") Inscription

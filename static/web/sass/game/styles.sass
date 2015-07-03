@@ -1,0 +1,53 @@
+$topBarHeight: 2.8125rem
+$bottomBarHeight: $topBarHeight
+
+body
+    margin: 0
+    font-family: "Arial"
+
+
+@font-face
+    $path: "/resources/BebasNeue_Regular"
+    font-family: 'BebasNeue'
+    src: url($path + '.otf') format('opentype'), url($path + '.ttf') format('truetype')
+
+@font-face
+    $path: "/resources/BebasNeue_Bold"
+    font-family: 'BebasNeue'
+    font-weight: 700
+    src: url($path + '.otf') format('opentype'), url($path + '.ttf') format('truetype')
+
+@import "var"
+@import "game"
+@import "overlay"
+@import "notif"
+@import "chat"
+
+// Overwrite bootstrap
+button.btn.btn-fw
+    width: 100%
+    font-weight: 700
+
+input.form-control, button.btn
+    border: 0
+    -webkit-border-radius: 0
+    -moz-border-radius: 0
+    border-radius: 0
+
+input.error
+    box-shadow: 0px 0px 1.5px 1px #F00
+
+hr
+    border-color: rgba(238, 238, 238, 0.3)
+select
+    color: black
+// Tools
+.left
+    float: left
+.right
+    float: right
+.center
+    text-align: center
+
+.btn.signup
+    margin-bottom: 10px

@@ -1,0 +1,91 @@
+.overlay
+    .login
+        .wrapper.col-xs-12.col-sm-6.col-sm-offset-3
+            form(name="signupForm")
+                .form-group
+                    label(for='nickname') Pseudo
+                    input#firstname.form-control(
+                        type='text',
+                        name='nickname',
+                        ng-model='nickname',
+                        ng-class='{error: errors.nickname}'
+                        ng-change='errors.nickname = null'
+                        required
+                        placeholder='Pseudo')
+                    label(for='nickname' ng-show='errors.nickname' class='errors')
+                        | {{errors.nickname}}
+                .form-group
+                    label(for='email') Email
+                    input#email.form-control(
+                        type='email',
+                        name='email',
+                        ng-model='email',
+                        placeholder='Email',
+                        required='',
+                        ng-class='{error: errors.email || signupForm.email.$invalid && !signupForm.email.$error.required}'
+                        ng-change='errors.email = null'
+                        pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*")
+                    label(for='email' ng-show='errors.email' class='errors')
+                        | {{errors.email}}
+                    label(for='email' ng-show='signupForm.email.$error.pattern' class='errors')
+                        | L'email est invalide
+                .form-group
+                    label(for='password') Mot de passe
+                    input#password.form-control(
+                        type='password',
+                        name='password',
+                        ng-model='password',
+                        placeholder='Mot de passe',
+                        ng-class='{error: errors.password}'
+                        ng-change='errors.password = null'
+                        required='')
+                    label(for='password' ng-show='errors.password' class='errors')
+                        | {{errors.password}}
+                .form-group
+                    label(for="teamName") Création ou choix de l'équipe
+                    input.form-control(
+                        type='text',
+                        name="teamName"
+                        ng-model='resultTeam.name',
+                        typeahead='team.name for team in teams | filter:$viewValue '
+                        typeahead-loading='loadingTeams'
+                        placeholder='Nom de l\'équipe'
+                        ng-class='{error: errors.teamName}'
+                        ng-change='errors.teamName = null'
+                        required='')
+                    i.glyphicon.glyphicon-refresh(ng-show="loadingTeams")
+                    label(for='teamName' ng-show='errors.teamName' class='errors')
+                        | {{errors.teamName}}
+                .form-group
+                    label(for='teamPassword') {{!team() ? 'Créer le c' : 'C'}}ode d'accès de l'équipe
+                    input.form-control(
+                        type='text'
+                        ng-model="resultTeam.password"
+                        name='teamPassword'
+                        placeholder='Code d\'accès de la team'
+                        ng-class='{error: errors.teamPassword}'
+                        ng-change='errors.teamPassword = null'
+                        required='')
+                    label(for='teamPassword' ng-show='errors.teamPassword' class='errors')
+                        | {{errors.teamPassword}}
+                .form-group(ng-if="!team()")
+                    label(for='teamSlogan') Créer le slogan de l'équipe
+                    input.form-control(
+                        type='text'
+                        name='teamSlogan'
+                        placeholder='Tapez le slogan de la team'
+                        ng-class='{error: errors.teamSlogan}'
+                        ng-change='errors.teamSlogan = null'
+                        ng-model="resultTeam.slogan")
+                    label(for='teamSlogan' ng-show='errors.teamSlogan' class='errors')
+                        | {{errors.teamSlogan}}
+                .form-group(ng-if="team()")
+                    label(for='teamSlogan') Slogan de l'équipe
+                    input.form-control(
+                        type='text'
+                        name='teamSlogan'
+                        placeholder='Tapez le slogan de la team'
+                        ng-model="team().slogan"
+                        disabled)
+                button.btn.btn-success.btn-fw(ng-click="create(signupForm)" ng-disabled="signupForm.$invalid") Valider
+            button.btn.btn-primary.btn-fw(ui-sref="login") Login

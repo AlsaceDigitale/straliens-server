@@ -1,0 +1,155 @@
+doctype html
+head
+    meta(charset='utf-8')
+    title Straliens Millenium
+    link(rel='icon', type='image/png', href='/resources/favicon.png')
+    link(rel='stylesheet', href='css/style.min.css')
+    link(href='http://fonts.googleapis.com/css?family=PT+Serif', rel='stylesheet', type='text/css')
+    script(src='/resources/scrollReveal.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+    script.
+        $(window).load(function() {
+            new scrollReveal();
+        });
+.title
+    .filter
+    .logo
+        img(src='/resources/logo.png')
+        .clearfix
+        h1
+            | Straliens Millenium
+    .edgefest
+        a(href='http://edgefest.fr')
+            h1
+                | Par 
+                span Alsace Digitale
+                |  pour
+            img(src='/resources/edgefest.png', alt='Edgefest')
+    h2
+        | Les
+        span 3 et 4 juillet
+        |  sauvez Strasbourg de l'invasion !
+    .join
+        a(href='/game/#/')
+            button Rejoindre l'aventure →
+#content.content
+    div
+        section.story
+            .content
+                h1 Scénario du jeu
+                p
+                    | Les Straliens, extra-terrestres guerriers, ont envahi Strasbourg. Afin d’étendre leur domination sur la Terre, ils utilisent l'antenne principale de la cathédrale de Strasbourg pour communiquer avec leur planète-mère. Cet émetteur/récepteur est alimenté par différents convecteurs d'énergie disséminés dans le centre-ville.
+                    br
+                    br
+                    | Les Terriens contre-attaquent et décident de riposter en désactivant le réseau.
+
+        section.explain
+            .mockup(data-sr='vF 0.2')
+                img(src='/resources/mockup.png')
+            .content(data-sr='vF 0.2')
+                h1(data-sr='vF 0.2') Déroulement du jeu
+                p(data-sr='vF 0.2')
+                    | En fonction du camp qui est assigné à votre équipe en début de partie (Straliens ou Terrien), votre but est soit de renforcer le réseau, soit de le désactiver. Pour cela, chaque joueur dispose d'une réserve d'énergie qui est rechargée tout au long de la partie.
+                    br
+                    | Cette énergie lui permet d'activer (joueur Straliens) ou désactiver (joueur Terrien) les convecteurs. Un convecteur appartient au camp ayant transféré le plus d'énergie pour l'activer ou le désactiver. 
+                    br
+                    br
+                    | Info joueur : les convecteurs se présentent sous forme d'autocollants collés sur les vitrines, avec un QR code et un tag NFC.
+                h1(data-sr='vF 0.2') Pour jouer
+                p(data-sr='vF 0.2')
+                    | Les personnes voulant jouer peuvent s'inscrire sur straliens.eu, puis créer ou rejoindre une équipe.  Comptez une durée de jeu de 3h. Vous pouvez rejoindre ou quitter une partie à tout moment.
+
+                h1(data-sr='vF 0.2') Prix
+                p(data-sr='vF 0.2') Meilleur joueur du week-end: un casque Bluetooth
+                p(data-sr='vF 0.2') Meilleurs équipes pour chaque partie: cadeaux des partenaires Edgefest (UGC et Orange)
+                p(data-sr='vF 0.2') Joueurs ayant activé ou désactivé tous les convecteurs: une serviette la Plage Digitale
+
+                h1(data-sr='vF 0.2') Déroulement de la partie
+                p(data-sr='vF 0.2')
+                    | Au départ d'une partie, chaque équipe se verra attribuer un camp, Straliens ou Terrien. Le but est de retrouver les convecteurs d’énergie et de les « capturer ».
+                    | Dès qu'un joueur en trouve un, il doit flasher le tag NFC ou le QR code, avec son smartphone*, pour investir l'énergie qu’il aura accumulée dans le convecteur. Le niveau d’énergie du joueur reviendra à 0 avant d’augmenter à nouveau.
+                    br
+                    | Le convecteur quant à lui aura un statut soit Straliens soit Terrien en fonction du camp du joueur.
+                    | Au cours de la partie pour changer le statut d’un convecteur, il faut que les joueurs du camp adverse lui transfère plus d’énergie. Pour éviter de ce faire voler les convecteurs les joueurs peuvent renforcer le niveau d’énergie de ceux-ci.
+                h1(data-sr='vF 0.2') Exemple
+                p(data-sr='vF 0.2')
+                    | En début de partie un joueur Straliens transfère 10 points d’énergie à un convecteur, un joueur Terrien peut alors transférer 15 points d’énergie et le convecteur changera de camp, ou un joueur Straliens peut lui transférer 15 points d'énergie ce qui renforcera sa position.
+                    | Une carte vous permet de connaitre l'état de tout le réseau d'énergie en temps réel.
+                    | Chaque action que vous effectuez vous permet d'augmenter votre score, ainsi que celui de votre équipe et de votre camp (voir ci-dessous).
+
+                h1(data-sr='vF 0.2') Notes
+                p(data-sr='vF 0.2')
+                    | Au début de la partie les convecteurs sont tous neutres (niveau d'énergie à 0)
+                    | A la fin de la partie, le camp victorieux est le camp possédant le plus de convecteurs d'énergie.
+                h1(data-sr='vF 0.2') Tableau des scores
+                table(data-sr='vF 0.2')
+                    thead
+                        tr
+                          th 
+                          th Joueur
+                          th Équipe
+                      tbody
+                        tr
+                          td Activation ou désactivation d'un convecteur d'énergie
+                          td 10
+                          td 1
+                        tr
+                          td Prise du contrôle d'un convecteur d'énergie
+                          td 5
+                          td 1
+                        tr
+                          td Gagner une partie
+                          td 100
+                          td 0
+
+                h1(data-sr='vF 0.2') Matériel nécessaire
+                p(data-sr='vF 0.2') Un smartphone avec connexion à Internet et GPS.
+                p(data-sr='vF 0.2') *Si vous n'en avez pas Orange vous permettra d'en emprunter gratuitement au point de ralliement du jeu situé vendredi à la plage de sable devant la médiathèque, et samedi au Shadok.
+
+    section.citation(data-sr='vF 0.2')
+        h1 "Je croyais vraiment que je les avais tous explosés."
+        p
+            span Ellen Ripley
+            | , Warrant Officer, Nostromo Ship
+    .clearfix
+    section.lastform(data-sr='vF 0.2')
+        .join
+            label(for="mce-EMAIL")
+                | Mais le mieux c'est encore d'essayer !
+            br
+            br
+            a(href='/game/#/signup')
+                button Rejoindre l'aventure →
+footer
+    .realisation(data-sr='vF 0.2')
+        h1 Réalisation
+        .hs
+            a(href='https://www.facebook.com/groups/402624123157676/')
+                img(src='/resources/logo_hs.png')
+                h2 HackSXB
+        .ad
+            a(href='http://alsacedigitale.org')
+                img(src='/resources/logo_ad.png')
+                h2 Alsace Digitale
+        h2
+            | Pour participer au projet Straliens
+            br
+            a(href='mailto:hacksxb@alsacedigitale.org') hacksxb@alsacedigitale.org
+    .partenaires(data-sr='vF 0.2')
+        h1 Partenaires
+        .orange
+            a(href='http://orange.fr')
+                img(src='/resources/logo_orange.jpg')
+                h2 Orange
+        .scalingo
+            a(href='https://scalingo.com')
+                img(src='/resources/logo_scalingo.png')
+                h2 Scalingo
+        .ugc
+            a(href='http://ugc.fr')
+                img(src='/resources/logo_ugc.png')
+                h2 UGC
+        .ce
+            a(href='http://www.caisse-epargne.fr')
+                img(src='/resources/logo_ce.jpg')
+                h2 Caisse d'épargne

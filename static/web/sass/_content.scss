@@ -1,0 +1,113 @@
+@import 'config';
+
+.content {
+  .story {
+    padding-top: 50px;
+    background: $green;
+    position: relative;
+    text-align: center;
+    .content {
+      h1 {
+        font-size: 35px;
+        text-align: left;
+        margin-bottom: 20px;
+        display: block;
+        padding: 0 100px;
+        @include mq(0, desktop) {
+          padding: 0 50px;
+        }
+      }
+      p {
+        padding: 0 100px;
+        color: $white;
+        font-size: 25px;
+        text-align: justify;
+        margin: 0;
+        @include mq(0, desktop) {
+          padding: 0 50px;
+        }
+      }
+    }
+  }
+  .explain {
+    padding: 50px 0;
+    background: $green;
+    h1 {
+      font-size: 35px;
+      text-align: left;
+      margin-bottom: 20px;
+      display: block;
+      padding: 0 100px;
+      @include mq(0, desktop) {
+        padding: 0 50px;
+      }
+    }
+    p {
+      padding: 0 100px;
+      color: $white;
+      font-size: 25px;
+      text-align: justify;
+      @include mq(0, desktop) {
+        padding: 0 50px;
+      }
+    }
+    .mockup {
+      width: 30%;
+      height: 100%;
+      position: relative;
+      float: left;
+      top: 50%;
+      @include mq(desktop, wide) {
+        width: 40%;
+      }
+      @include mq(0, desktop) {
+        width: 100%;
+        img {
+          max-height: 70vh;
+          width: auto !important;
+          margin-bottom: 40px;
+        }
+      }
+      img {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        width: 70%;
+        transform: translate(-50%, 0%);
+        -webkit-transform: translate(-50%, 0%);
+      }
+    }
+  }
+  .citation {
+    padding: 70px 0;
+    h1 {
+      font-size: 35px;
+      text-align: center;
+      margin-bottom: 50px;
+      display: block;
+      text-transform: none;
+    }
+    p {
+      span {
+        color: $green;
+      }
+      padding: 0 100px;
+      color: $black;
+      text-align: center;
+      font-size: 20px;
+    }
+  }
+  .lastform {
+    margin-top: 40px;
+    background: $green;
+    height: 300px;
+    position: relative;
+    .join {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+    }
+  }
+}

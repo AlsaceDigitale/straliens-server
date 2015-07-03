@@ -1,0 +1,27 @@
+@import 'config';
+
+.join {
+  text-align: center;
+  label {
+    font-family: Futura, Futura-Medium, "Futura Medium", "Century Gothic", CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
+    color: $white;
+    display: block;
+    font-size: 25px;
+  }
+  button {
+    padding: 20px;
+    font-size: 30px;
+    transition-duration: 250ms;
+    @include mq(0, desktop) {
+      width: 220px;
+      margin-top: 10px;
+    }
+    background: $black;
+    color: $green;
+    border: 7px $black solid;
+    &:hover {
+      background: $green;
+      color: $black;
+    }
+  }
+}

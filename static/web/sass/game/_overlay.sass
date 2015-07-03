@@ -1,0 +1,42 @@
+// other view container
+.overlay
+    &:after
+        content: ""
+        display: block
+        position: fixed
+        top: 0
+        left: 0
+        height: 100%
+        width: 100%
+        background: rgba($black, 0.8)
+    .login
+        z-index: 1
+        position: absolute
+        top: 10px
+        left: 50%
+        -webkit-transform: translate(-50%, 0%)
+        transform: translate(-50%, 0%)
+        width: calc(100% - 15px)
+        max-width: 800px
+        .wrapper
+            padding: 15px
+            background-color: rgba($white, 0.8)
+            form label
+                font-size: 18px
+                color: $grey
+    .nogame
+        padding-top: 50px
+        > div
+            z-index: 1
+            background: rgba($black, 0.5)
+            padding: 30px
+        text-align: center
+        color: white
+        h1
+            color: $blue
+            font-size: 25px
+        h2
+            font-size: 25px
+        h3
+            color: $green
+            font-size: 20px

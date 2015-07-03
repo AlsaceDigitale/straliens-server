@@ -1,0 +1,132 @@
+// Main game view
+.game
+    position: fixed
+    height: 100%
+    width: 100%
+    color: $green
+    font-size: 1.8em
+    &.terriens
+        color: $blue
+
+    .chat-sidebar
+        overflow: hidden
+        position: fixed
+        background: #fff
+        width: 100%
+        height: 100%
+        top: 0
+        z-index: 101
+        opacity: 0
+        filter: alpha(opacity=0)
+        left: 0 !important
+
+    .chat-sidebar.toggled
+        opacity: 1
+        filter: alpha(opacity=100)
+        width: 100% !important
+        left: 0 !important
+
+    nav, footer
+        z-index: 100
+        font-family: "BebasNeue"
+        z-index: 100
+        position: absolute
+        min-width: 100%
+        padding-right: 5px
+        padding-left: 5px
+
+    nav
+        top: 0
+        background: rgba($black, 0.6)
+        height: 40px
+        .scan
+            color: rgba($black, 0.6)
+            text-align: center
+            border: 1px solid $green
+            position: absolute
+            left: 50%
+            transform: translateX(-50%)
+            -wekit-transform: translateX(-50%)
+            margin-top: 3px
+            width: 100px
+            height: 34px
+            background: $green
+            text-decoration: none
+            animation-duration: 500ms
+            &.TERRIENS
+                background: $blue
+                border: 1px solid $blue
+            &.TERRIENS:hover, &.TERRIENS:focus
+                color: $blue
+            &:hover, &:focus
+                text-decoration: none
+                background: none
+                color: $green
+
+        .score
+            top: 3px
+            position: absolute
+            left: 5px
+        .energy
+            top: 3px
+            position: absolute
+            right: 5px
+
+    footer
+        bottom: 0
+        background: rgba($black, 1)
+        padding-top: 3px
+        .msg
+            position: absolute
+            left: 5px
+        .side
+            text-align: center
+        .time
+            position: absolute
+            right: 5px
+
+    // Hacking the Google's Matrix there
+    .angular-google-map-container
+        height: 100%
+        position: fixed
+        .map-label
+            font-family: "Lucida Grande", "Arial", sans-serif
+            font-size: 16px
+            white-space: nowrap
+            transform: translate(-50%, -50%)
+            height: 45px
+            width: 45px
+            border-radius: 45px
+            border-color: $grey
+            border-width: 6px
+            border-style: solid
+            color: $grey
+            display: flex !important
+            align-items: center
+            justify-content: center
+            background: rgba($black, 0.7)
+        .map-label-cathedrale
+            font-family: "Lucida Grande", "Arial", sans-serif
+            font-size: 16px
+            white-space: nowrap
+            transform: translate(-50%, -50%)
+            height: 45px
+            width: 45px
+            color: white
+            display: flex !important
+            align-items: center
+            justify-content: center
+            background: url('/resources/cathedrale.png') no-repeat
+            background-position: center
+            background-size: contain
+            padding-top: 20px
+        .Side-STRALIENS
+            border-color: $green
+            color: $green
+        .side-EARTHLINGS
+            border-color: $blue
+            color: $blue
+        .side-NEUTRAL
+            border-color: $grey
+            color: $grey
+

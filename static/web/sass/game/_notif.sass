@@ -1,0 +1,31 @@
+$notif_height: 5.625rem
+
+.notify-box
+    position: absolute
+    z-index: 101
+    margin-left : 0
+    top: 0
+    left: 25%
+    right: 0
+    width : 50%
+    height : $notif_height
+    background: $green
+    text-align: center
+    overflow: hidden
+
+    -webkit-box-shadow: 0 0 5px black
+    -moz-box-shadow: 0 0 5px black
+    -o-box-shadow: 0 0 5px black
+    box-shadow: 0 0 5px black
+    -webkit-border-radius: 0 0 10px 10px
+    -moz-border-radius: 0 0 10px 10px
+    -o-border-radius: 0 0 10px 10px
+    border-radius: 0 0 10px 10px
+    -webkit-transition: top 0.5s ease-out,opacity 0.2s ease-out
+    -moz-transition: top 0.5s ease-out,opacity 0.2s ease-out
+    -o-transition: top 0.5s ease-out,opacity 0.2s ease-out
+    transition: top 0.5s ease-out,opacity 0.2s ease-out
+
+.notify-message
+    text-align: center
+    line-height: $notif_height

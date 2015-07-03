@@ -1,0 +1,114 @@
+html(ng-app="straliens")
+    head
+        meta(name='viewport', content='width=device-width, user-scalable=false')
+
+        title STRALIENS - The Invasion Begins
+        link(href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css', rel='stylesheet', media='all')
+        link(rel="stylesheet" href="/css/game/styles.min.css")
+
+    body(ng-controller="notifCtrl")
+        .game(ng-controller="playCtrl" ng-class="side")
+            nav.header(ng-hide="side == 'NEUTRE'")
+                span.score SCORE {{user.score}}
+                //button(ng-click="shownotify()") TEST
+                a.scan(ui-sref="scan" ng-class="side") SCANNER
+                span.energy SCORE TEAM {{team.score}}
+            section
+
+                ui-gmap-google-map(
+                    center='map.center'
+                    zoom='map.zoom'
+                    options="map.options"
+                    events="map.events")
+                    ui-gmap-markers(
+                        models="points"
+                        coords="'coordinates'"
+                        options="'options'"
+                        icon="'icon'"
+                        control="markers")
+
+            //div(ng-controller="chat")       
+                div(style="position:absolute;top:25%;left:10px;height:50px;width:50px;border:2px solid red;z-index:200;background:red;")
+                    a(ng-click="open()", href="#") open
+
+                aside#chat(ng-class="chatClass").chat-sidebar
+
+                  h1 {{tab}}
+
+                  ul.tab-nav
+                    li
+                      a.chat-toggle(ng-click="tab='room'") Messages
+
+                    li.active
+                      a.chat-toggle(ng-click="tab='public'") Notifications
+                  .tab-content
+                    #friends.tab-pane.fade.fade(ng-if="tab=='room'")
+                      .panel-list
+                        #chat-friends-content.list-group.chat-list.scrollable(style='overflow: hidden; outline: none;')
+                        .chat-list-search
+                          .chat-search
+                            input.form-control(type='text', placeholder='Rechercher un ami')
+                        #ascrail2000.nicescroll-rails.nicescroll-rails-vr(style='width: 3px; z-index: 1001; cursor: default; position: absolute; top: 55px; left: 0px; height: 885px; display: none; opacity: 0;')
+                          .nicescroll-cursors(style='position: relative; top: 0px; float: right; width: 3px; height: 0px; border-radius: 5px; background-color: rgba(0, 0, 0, 0.498039); background-clip: padding-box;')
+                        #ascrail2000-hr.nicescroll-rails.nicescroll-rails-hr(style='height: 3px; z-index: 1001; top: 937px; left: 0px; position: absolute; cursor: default; display: none; opacity: 0;')
+                          .nicescroll-cursors(style='position: absolute; top: 0px; height: 3px; width: 0px; border-radius: 5px; left: 0px; background-color: rgba(0, 0, 0, 0.498039); background-clip: padding-box;')
+                      .panel-chat
+                        .panel-chat-message
+                          .chat-message-topbar.clearfix
+                            a.chat-message-back.chat-back
+                              i.fa.fa-angle-left
+                              span.inlineblock Retour
+                            .chat-message-actions.pull-right
+                              a#cmaction-report.ajax-link.cmaction-report(href='#')
+                                i.flaticon-warningsign
+                                |  Signaler
+                              a#cmaction-remove.ajax-link.cmaction-remove(href='#')
+                                i.flaticon-paperbin6
+                                |  Supprimer
+                          #chat-messages-content.chat-message-content.scrollable(style='overflow: hidden; outline: none;')
+                          #ascrail2001.nicescroll-rails.nicescroll-rails-vr(style='width: 3px; z-index: 1001; cursor: default; position: absolute; top: 48px; left: 0px; height: 40px; display: none;')
+                            .nicescroll-cursors(style='position: relative; top: 0px; float: right; width: 3px; height: 0px; border-radius: 5px; background-color: rgba(0, 0, 0, 0.498039); background-clip: padding-box;')
+                          #ascrail2001-hr.nicescroll-rails.nicescroll-rails-hr(style='height: 3px; z-index: 1001; top: 85px; left: 0px; position: absolute; cursor: default; display: none;')
+                            .nicescroll-cursors(style='position: absolute; top: 0px; height: 3px; width: 0px; border-radius: 5px; background-color: rgba(0, 0, 0, 0.498039); background-clip: padding-box;')
+                        .chat-list-search
+                          .chat-search
+                            form#chat-form-message(action='', method='post')
+                              input#msg-form.form-control(type='text', name='message', placeholder='Dites quelque chose')
+                    #notifications.tab-pane.fade.active.in(ng-if="tab=='public'")
+                      .list-group.notifications-list
+                        #notifications-list-content
+                          .no-message-found Aucune notification disponible
+                      .chat-list-search
+                        .chat-search
+                          input.form-control(type='text', placeholder='Rechercher un message')
+
+            footer(ng-hide="side == 'NEUTRE'")
+                .wrapper
+                    span.msg ENERGIE {{user.energy}}
+                    span.time {{endTime}}
+                    .side {{side | uppercase}}
+
+        ui-view
+
+// Plugins
+script(src='/plugins/lodash/lodash.min.js')
+script(src='/plugins/moment/moment.js')
+script(src='/plugins/moment/locale/fr.js')
+
+// Angular
+script(src='/plugins/angular/angular.min.js')
+script(src='/plugins/angular-google-maps/dist/angular-google-maps.min.js')
+script(src='/plugins/angular-ui-router/release/angular-ui-router.min.js')
+script(src='/plugins/angular-cookies/angular-cookies.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js')
+
+script(src="/plugins/angular-qr-scanner/qr-scanner.js")
+script(src="/plugins/angular-qr-scanner/src/jsqrcode-combined.min.js")
+
+// Angular bootstrap-ui
+script(src='/plugins/angular-bootstrap/ui-bootstrap.min.js')
+script(src='/plugins/angular-bootstrap/ui-bootstrap-tpls.min.js')
+
+// Straliens scripting
+script(src='/plugins/angular-notify/dist/angular-notify.js')
+script(src='/js/app.js')

@@ -1,0 +1,90 @@
+@import 'config';
+
+footer {
+  background: $grey;
+  padding: 80px 0px;
+  h1 {
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: 15px;
+    &:after {
+      content: "";
+      display: block;
+      height: 4px;
+      width: 200px;
+      background-color: $black;
+      margin: auto;
+      margin-top: 5px;
+    }
+  }
+  .realisation {
+    margin-bottom: 50px;
+    text-align: center;
+    div {
+      width: 200px;
+      display: inline-block;
+      text-align: center;
+      margin: 50px 30px 0px 30px;
+      a {
+        text-decoration: none;
+        &:hover h2 {
+          color: $darkgrey;
+        }
+      }
+      img {
+        height: 150px;
+        width: 150px;
+        margin-bottom: 15px;
+      }
+      h2 {
+        font-size: 20px;
+        color: $green;
+        transition-duration: 250ms;
+      }
+    }
+    h2 {
+      text-align: center;
+      a {
+        text-decoration: none;
+        font-size: 20px;
+        color: $green;
+        transition-duration: 250ms;
+        &:hover {
+          color: $darkgrey;
+        }
+      }
+    }
+  }
+  .partenaires {
+    text-align: center;
+    h1 {
+      margin-bottom: 0px;
+    }
+    div {
+      display: inline-block;
+      text-align: center;
+      margin: 50px 30px 0px 30px;
+      a {
+        text-decoration: none;
+        &:hover h2 {
+          color: $darkgrey;
+        }
+      }
+      img {
+        height: 150px;
+        margin-bottom: 15px;
+      }
+      h2 {
+        font-size: 20px;
+        color: $green;
+        transition-duration: 250ms;
+      }
+    }
+    .scalingo {
+      img {
+        margin-bottom: 50px;
+        height: 50px;
+      }
+    }
+  }
+}

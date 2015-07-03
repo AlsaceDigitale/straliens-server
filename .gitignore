@@ -2,3 +2,5 @@ node_modules
 general.log
 *.map
 *.js
+
+static/web/build

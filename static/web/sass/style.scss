@@ -1,0 +1,74 @@
+@import 'normalize';
+@import 'config';
+$mq-responsive: true;
+$mq-breakpoints: (
+    mobile:  320px,
+    tablet:  740px,
+    desktop: 980px,
+    wide:    1300px,
+);
+@import 'mq';
+@font-face {
+    font-family: norwester;
+    src: url(/resources/norwester.otf);
+}
+h1, h2 {
+  font-family: Futura, Futura-Medium, "Futura Medium", "Century Gothic", CenturyGothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", sans-serif;
+  color: $black;
+}
+h1 {
+  font-size: 100px;
+  font-weight: bold;
+  margin: 0;
+  text-transform: uppercase;
+}
+h2 {
+  font-size: 18px;
+  text-transform: uppercase;
+}
+p {
+  font-family: 'PT Serif', serif;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+body {
+  background: $grey;
+}
+
+table {
+  margin: auto;
+  border-collapse: collapse;
+  margin-top: 40px;
+  margin-bottom: 50px;
+
+  td, th { 
+    padding: 6px; 
+    border: 2px solid $black; 
+    text-align: center;
+    font-size: 25px;
+    padding: 15px 30px;
+  }
+  th { 
+    background: $black; 
+    color: $green; 
+    font-weight: bold; 
+  }
+  td {
+    color: $white;
+  }
+}
+
+@import 'title';
+@import 'form';
+@import 'content';
+@import 'footer';

@@ -30,6 +30,9 @@ http.tuneResponses app
 # def routing
 api = require './api'
 api app
+# def static
+app.use express.static "#{__dirname}/static/web/build"
+
 
 # START APPLICATION
 # -----------------
