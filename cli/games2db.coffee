@@ -17,12 +17,13 @@ createGameFn = (id, startTime, endTime) ->
         startTime: startTime
         endTime: endTime
 
-createGamePointFn = (gameId, pointId) ->
+createGamePointFn = (gameId, pointId, type) ->
     GamePoint.create
         type: ""
         energy: 0
         gameId: gameId
         pointId: pointId
+        type: type
 
 db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Game.drop().then -> db.syncSchemas ->
     for game in gameDatas.games
@@ -30,5 +31,9 @@ db.orm.query('SET FOREIGN_KEY_CHECKS = 0', {raw: true}).then -> Game.drop().then
         logger.info "importing game \"#{game.startTime}\" -> \"#{game.endTime}\"".underline
         logger.info "creating pointGame"
         for point in pointDatas.points
-            createGamePointFn game.id, point.id
+            if point.type == null
+                type = ""
+            else
+                type = point.type
+            createGamePointFn game.id, point.id, type
         
