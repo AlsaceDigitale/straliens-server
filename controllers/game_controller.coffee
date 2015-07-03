@@ -66,7 +66,7 @@ class GameController
                 if !points or !currentGame then return
                 for point in points
                     @getGamePoint point.dataValues, currentGame, (gamePoint) =>
-                        console.log "gamePoint #{gamePoint.id}"
+                        #console.log "gamePoint #{gamePoint.id}"
                         GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
                             where: id: gamePoint.id
                         .done ->
