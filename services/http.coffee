@@ -34,6 +34,7 @@ addThirdPartyMiddlewares = (app) ->
 tuneResponses = (app) ->
     app.use (req, res, next) ->
         # returns a sequelize table to include
+        res.header 'Access-Control-Allow-Origin', '*'
         # model associations in REST
         req.getAssocSections = (availableSections) ->
             return if not req.query.sections? # if no section is specified
