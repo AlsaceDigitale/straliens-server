@@ -134,7 +134,6 @@ class GameController
             cb gameTeam[0]
 
     checkPoint: (user, game, point, lat, lng, useGPS, cb) ->
-        logger.info "controller: Point check gid=#{game.id} pid=#{point.id} uid=#{user.id}"
         @getGamePoint point, game, (gamePoint) =>
             @getGameUser game, user, (gameUser) =>
                 # Check if coordinates are right
