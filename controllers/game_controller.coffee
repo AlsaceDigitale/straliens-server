@@ -170,6 +170,10 @@ class GameController
     checkCoordinates: (uLat, uLng, tLat, tLng, delta) ->
         return false unless delta > 0
         earthRadius = 6372.8 # Km
+        uLat =  parseFloat (uLat).replace(',', '.')
+        uLng = parseFloat (uLng).replace(',', '.')
+        tLat = parseFloat (tLat).replace(',', '.')
+        tLng = parseFloat (tLng).replace(',', '.')
         uLat = uLat/180 * Math.PI
         uLng = uLng/180 * Math.PI
         tLat = tLat/180 * Math.PI
