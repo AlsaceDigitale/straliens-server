@@ -4,56 +4,56 @@
             "id": 1,
             "code":"G8P3TULX",
             "name": "La bourse",
-            "lat": 48.5760958,
-            "lng": 7.7541143
+            "lat": 48.576056,
+            "lng": 7.753342
         }, {
             "id": 2,
             "code":"QB352GKM",
             "name": "Restaurant La bourse",
-            "lat": 48.5759421,
-            "lng": 7.7537813
+            "lat": 48.576354,
+            "lng": 7.753739
         },
         {
             "id": 3,
             "code":"4SQK4UUQ",
             "name": "Maison des syndicats",
-            "lat": 48.5769758,
-            "lng": 7.753662
+            "lat": 48.576887,
+            "lng": 7.753512
         },
         {
             "id": 4,
             "code":"VYAD7XHY",
             "name": "La Chambre",
-            "lat": 48.5777,
-            "lng": 7.7530375
+            "lat": 48.578306,
+            "lng": 7.753899
         },
         {
             "id": 5,
             "code":"98HV62QC",
             "name": "Green Fleuriste",
-            "lat": 48.5777302,
-            "lng": 7.7530734
+            "lat": 48.577857,
+            "lng": 7.753837
         },
         {
             "id": 6,
             "code":"SANEVODB",
             "name": "Cafe berlin",
-            "lat": 48.5780459,
-            "lng": 7.7538754
+            "lat": 48.578254,
+            "lng": 7.753800
         },
         {
             "id": 7,
             "code":"D62D5T4H",
             "name": "MusicShop",
-            "lat": 48.5789249,
-            "lng": 7.755418
+            "lat": 48.578921,
+            "lng": 7.755417
         },
         {
             "id": 8,
             "code":"ZL8CPD69",
             "name": "Bemac",
-            "lat": 48.5791523,
-            "lng": 7.7503007
+            "lat": 48.578818,
+            "lng": 7.749954
         },
         {
             "id": 9,
@@ -66,8 +66,8 @@
             "id": 10,
             "code":"VAB1J0BS",
             "name": "Friperie Leopard",
-            "lat": 48.5820905,
-            "lng": 7.7544993
+            "lat": 48.579548,
+            "lng": 7.749850
         },
         {
             "id": 11,
@@ -142,44 +142,44 @@
         {
             "id": 21,
             "code":"68CIHL4Y",
-            "name": "Creux house",
-            "lat": 48.5816398,
-            "lng": 7.7438461
+            "name": "Rec house",
+            "lat": 48.582374,
+            "lng": 7.740836
         },
         {
             "id": 22,
             "code":"JBDS1LK3",
             "name": "Artichaut",
-            "lat": 48.5822528,
-            "lng": 7.7412949
+            "lat": 48.582154,
+            "lng": 7.741379
         },
         {
             "id": 23,
             "code":"QN3C8OJW",
             "name": "Tibet bleu",
-            "lat": 48.5824932,
-            "lng": 7.7401838
+            "lat": 48.582478,
+            "lng": 7.740159
         },
         {
             "id": 24,
             "code":"GAOE5ZAD",
             "name": "Gare",
-            "lat": 48.5843011,
-            "lng": 7.7352229
+            "lat": 48.584892,
+            "lng": 7.735084
         },
         {
             "id": 25,
             "code":"WTY5AI3E",
             "name": "Filcordo",
-            "lat": 48.5837743,
-            "lng": 7.7375207
+            "lat": 48.583853,
+            "lng": 7.737708
         },
         {
             "id": 26,
             "code":"2WL1KMHD",
             "name": "Assentec",
-            "lat": 48.5848123,
-            "lng": 7.738763
+            "lat": 48.584956,
+            "lng": 7.738663
         },
         {
             "id": 27,
