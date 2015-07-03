@@ -21,7 +21,9 @@ addSession = (app, io) ->
 
 # enable middlewares
 addThirdPartyMiddlewares = (app) ->
-    app.use cors()
+    app.use cors
+        credentials: true
+        origin: [/straliens\.eu/, /localhost:.*/, /straliens-staging\.scalingo\.io/]
     app.use bodyParser.urlencoded extended: true
     # extend express and routing
     router = new Router
@@ -42,6 +44,15 @@ tuneResponses = (app) ->
                 as: section
             } for section in availableSections when section in sections
             return includes
+
+        # checks if a user is authenticated
+        # otherwise, throw a 403 error
+        req.checkAuthentication = ->
+            unless req.session.user
+                do res.pleaseLoginError
+                return false
+            else
+                return true
 
         # builds URL from toute name and route params
         res.url = (route, params) ->
@@ -83,19 +94,19 @@ tuneResponses = (app) ->
             }, additionalData
 
         res.notFoundError = (message, additionalData = {}) ->
-            message or= 'Your request asked for a an non-existent resource.'
+            message or= 'Vous avez demandé une ressource inexistante.'
             res.genericError message, 'NotFoundError', 404, additionalData
 
         res.accessDeniedError = (message, additionalData = {}) ->
-            message or= 'Access denied: you have no sufficient credentials to access this feature.'
+            message or= 'Accès refusé: vous n\'avez pas les droits suffisants pour accéder à cette fonctionnalité.'
             res.genericError message, 'AccessDeniedError', 403, additionalData
 
         res.pleaseLoginError = (message, additionalData = {}) ->
-            message or= 'Access denied: please log in to access this feature.'
+            message or= 'Accès refusé: vous devez vous connecter pour avoir accès à cette fonctionnalité'
             res.genericError message, 'AccessDeniedError', 403, additionalData
 
         res.validationError = (errors) ->
-            res.genericError 'The form has erroneous fields!', 'ValidationError', 400, errors
+            res.genericError 'Le formulaire comporte des champs erronés.', 'ValidationError', 400, errors
 
         do next
 

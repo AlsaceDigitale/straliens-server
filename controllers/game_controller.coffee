@@ -45,22 +45,36 @@ class GameController
         logger.info 'controller: Managing energy for users'
         userEnergyUpd = "LEAST(#{constants.energy.user.maxValue}, energy + #{constants.energy.user.value})"
         @currentGame (currentGame) =>
-            User.find({}).done (user) =>
-                if !user or !currentGame then return
-                @getGameUser currentGame, user.dataValues, (gameUser) ->
-                    GameUser.update energy: Sequelize.literal(userEnergyUpd),
-                        where: id: gameUser.id
+            User.findAll()
+            .done (users) =>
+                if !users or !currentGame then return
+                for user in users
+                    @getGameUser currentGame, user.dataValues, (gameUser) ->
+                        GameUser.update energy: Sequelize.literal(userEnergyUpd),
+                            where: id: gameUser.id
+                        .done ->
+                            GameUser.findOne
+                                where: id: gameUser.id
+                            .done (gameUser) ->
+                                gameManager.onGameUserChange gameUser
 
     manageEnergyPoint: =>
         logger.info 'controller: Managing energy for points'
         pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
         @currentGame (currentGame) =>
-            Point.find({}).done (point) =>
-                console.log "Point #{point}"
-                if !point or !currentGame then return
-                @getGamePoint point.dataValues, currentGame, (gamePoint) =>
-                    GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
-                        where: id: gamePoint.id
+            Point.findAll({}).done (points) =>
+                if !points or !currentGame then return
+                for point in points
+                    @getGamePoint point.dataValues, currentGame, (gamePoint) =>
+                        #console.log "gamePoint #{gamePoint.id}"
+                        GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
+                            where: id: gamePoint.id
+                        .done ->
+                            GamePoint.findOne
+                                where: id: gamePoint.id
+                            .done (gamePoint) ->
+                                gameManager.onGamePointChange gamePoint
+
 
     assignTeams: =>
         logger.info 'controller: Assign teams'
@@ -78,8 +92,9 @@ class GameController
     currentGame: (callback) ->
         now = new Date
         Game.findOne
-            startTime: $lt: now
-            endTime: $gt: now
+            where:
+                startTime: $lt: now
+                endTime: $gt: now
         .done callback
 
     getGamePoint: (point, game, callback) ->
@@ -118,10 +133,15 @@ class GameController
         .done (gameTeam) ->
             cb gameTeam[0]
 
-    checkPoint: (user, game, point, cb) ->
+    checkPoint: (user, game, point, lat, lng, useGPS, cb) ->
         logger.info "controller: Point check gid=#{game.id} pid=#{point.id} uid=#{user.id}"
         @getGamePoint point, game, (gamePoint) =>
             @getGameUser game, user, (gameUser) =>
+                # Check if coordinates are right
+                if useGPS
+                    if @checkCoordinates(lat, lng, point.dataValues.lat, point.dataValues.lng, 200) == false
+                        console.log "Rejecting checkin of point #{point.id} with coords #{lat} #{lng} by user #{user.id}"
+                        return
                 @getGameTeamForUser game, user, (gameTeam) ->
                     GameUser.update
                         energy: 0
@@ -137,11 +157,32 @@ class GameController
                             id: gamePoint.id
                     .done =>
                         GamePoint.find
-                            id: gamePoint.id
+                            where:
+                                id: gamePoint.id
                         .done (gamePoint) ->
-                            gameManager.onPointCheckin game, gameUser, gameTeam, (gameUser, gameTeam) ->
+                            gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
                                 cb gameUser, gameTeam, gamePoint
 
+    # Checks if coordinates are inside radius of a point
+    # uLat, uLng are the coordinates of the moving point
+    # tLat, tLng are the coordinates of the fixed target.
+    # delta is the radius around the fixed target where we consider we are in range (In meter)
+    checkCoordinates: (uLat, uLng, tLat, tLng, delta) ->
+        return false unless delta > 0
+        earthRadius = 6372.8 # Km
+        uLat = uLat/180 * Math.PI
+        uLng = uLng/180 * Math.PI
+        tLat = tLat/180 * Math.PI
+        tLng = tLng/180 * Math.PI
+        rLat = (tLat - uLat)
+        rLng = (tLng - uLng)
+        a = Math.sin(rLat / 2) * Math.sin(rLat / 2) + Math.sin(rLng / 2) * Math.sin(rLng / 2) * Math.cos(uLat) * Math.cos(tLat)
+        d = (earthRadius * 2 * Math.asin(Math.sqrt(a))) * 1000 # d is the measured distance with the point, in meter
+        console.log "distance is #{d}"
+        if d <= delta
+            return true
+        else
+            return false
 
 # export
 module.exports = new GameController

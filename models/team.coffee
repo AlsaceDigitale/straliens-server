@@ -4,18 +4,17 @@ db = require './db'
 
 # custom validation constraints
 checkUnique = (value, next) ->
-    User.find where: nickname: value
-        .then (user) ->
-            if user then return next 'This name already exists'
+    Team.find where: name: value
+        .then (team) ->
+            if team then return next 'This team name already exists'
             return next()
         .catch (err) ->
             return next err
-            
+
 checkNotNull = (value, next) ->
     if value.length == 0
-        throw new Error('Atention valeur nulle')
-    else
-        next()
+        throw new Error 'Cette valeur ne peut être nulle'
+    else do next
 
 # def model
 Team = db.orm.define 'Team',

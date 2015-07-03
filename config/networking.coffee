@@ -1,10 +1,6 @@
 module.exports =
     sql:
-        database: 'straliens'
-        database: 'straliens'
-        username: 'straliens'
-        password: 'stralienspa$$'      
-        host: 'localhost'
+        db_url: process.env.SCALINGO_MYSQL_URL || 'mysql://straliens:stralienspa$$@localhost/straliens'
     http:
         port: process.env.PORT || 3000
         cookieSecret: '~4NaTWbY67!~'
