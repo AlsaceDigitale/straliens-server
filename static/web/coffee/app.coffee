@@ -1,14 +1,6 @@
 @App = angular.module 'straliens', ['ui.router', 'uiGmapgoogle-maps', 'ui.bootstrap', 'ngCookies', 'cgNotify', 'qrScanner']
-if location.host == 'straliens.scalingo.io' or location.host == 'straliens.eu'
-    serverUrl = 'http://straliens-server.scalingo.io'
-    wsUrl = 'ws://straliens-server.scalingo.io'
-else if location.host == 'straliens-staging.scalingo.io'
-    serverUrl = 'http://straliens-staging-server.scalingo.io'
-    wsUrl = 'ws://straliens-staging-server.scalingo.io'
-else
-    serverUrl = 'http://localhost:3000'
-    wsUrl = 'ws://localhost:3000'
-
+serverUrl = 'http://' + location.host
+wsUrl = 'ws://' + location.host
 
 App.config (uiGmapGoogleMapApiProvider) ->
     uiGmapGoogleMapApiProvider.configure {
