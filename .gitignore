@@ -2,5 +2,6 @@ node_modules
 general.log
 *.map
 *.js
+.sass-cache
 
 static/web/build
