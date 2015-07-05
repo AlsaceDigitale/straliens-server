@@ -54,7 +54,7 @@ tuneResponses = (app) ->
             else
                 return true
 
-        # builds URL from toute name and route params
+        # builds URL from route name and route params
         res.url = (route, params) ->
             app.namedRoutes.build route, params
 
