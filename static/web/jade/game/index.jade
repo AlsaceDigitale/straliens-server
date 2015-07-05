@@ -9,10 +9,10 @@ html(ng-app="straliens")
     body(ng-controller="notifCtrl")
         .game(ng-controller="playCtrl" ng-class="side")
             nav.header(ng-hide="side == 'NEUTRE'")
-                span.score SCORE {{user.score}}
+                span.score SCORE {{score|| 0}}
                 //button(ng-click="shownotify()") TEST
                 a.scan(ui-sref="scan" ng-class="side") SCANNER
-                span.energy SCORE TEAM {{team.score}}
+                span.energy SCORE TEAM {{teamScore|| 0}}
             section
 
                 ui-gmap-google-map(
@@ -84,7 +84,7 @@ html(ng-app="straliens")
 
             footer(ng-hide="side == 'NEUTRE'")
                 .wrapper
-                    span.msg ENERGIE {{user.energy}}
+                    span.msg ENERGIE {{user.energy || 0}}
                     span.time {{endTime}}
                     .side {{side | uppercase}}
 

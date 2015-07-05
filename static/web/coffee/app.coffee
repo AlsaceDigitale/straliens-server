@@ -258,6 +258,28 @@ App.controller 'playCtrl', [
     '$timeout'
     ($rootScope, $scope, $http, $state, uiGmapIsReady, $timeout) ->
 
+        # Get all the points
+        $http.get serverUrl + "/api/points"
+        .success (data) ->
+            $rootScope.points = data
+            $rootScope.points.forEach (point) ->
+                $http.get serverUrl + "/api/points/"+ point.id
+                .success (data) ->
+                    point.coordinates = { latitude: point.lat, longitude: point.lng }
+                    if data.type == 'cathedrale'
+                        point.options = {
+                            labelContent: Math.abs(data.energy) || '0'
+                            labelClass: 'map-label-cathedrale'
+                        }
+                    else
+                        point.options = {
+                            labelContent: Math.abs(data.energy) || '0'
+                            labelClass: 'map-label side-' + data.side
+                        }
+                    point.icon =
+                        path: ''
+                    point.data = data
+
         initGame = ->
             $rootScope.checkUserOrReconnect()
             .then ->
@@ -272,29 +294,6 @@ App.controller 'playCtrl', [
                     .success (side) ->
                         if side == "EARTHLINGS" then side = "TERRIENS"
                         $rootScope.side = side
-
-
-                    # Get all the points
-                    $http.get serverUrl + "/api/points"
-                    .success (data) ->
-                        $rootScope.points = data
-                        $rootScope.points.forEach (point) ->
-                            $http.get serverUrl + "/api/points/"+ point.id
-                            .success (data) ->
-                                point.coordinates = { latitude: point.lat, longitude: point.lng }
-                                if data.type == 'cathedrale'
-                                    point.options = {
-                                        labelContent: Math.abs(data.energy) || '0'
-                                        labelClass: 'map-label-cathedrale'
-                                    }
-                                else
-                                    point.options = {
-                                        labelContent: Math.abs(data.energy) || '0'
-                                        labelClass: 'map-label side-' + data.side
-                                    }
-                                point.icon =
-                                    path: ''
-                                point.data = data
 
 
                     # Manage the clock
@@ -394,6 +393,7 @@ App.controller 'loginCtrl', [
         $rootScope.checkUserOrReconnect()
         .then ->
             $state.go 'play'
+            window.location.reload false
         , null
 
         $scope.validate = (form) ->
@@ -402,6 +402,7 @@ App.controller 'loginCtrl', [
                 password: form.password
             .success (user) ->
                 $state.go 'play'
+                window.location.reload false
             .error (err) ->
                 if err.type == 'AuthenticationError'
                     $scope.error = true
@@ -459,6 +460,7 @@ App.controller 'signupCtrl', [
                     $rootScope.socket = io wsUrl
 
                     $state.go 'play'
+                    window.location.reload false
                 .error (data) ->
                     data.fields.forEach (err) ->
                         $scope.errors[err.path] = err.message
@@ -508,7 +510,8 @@ App.controller 'nogameCtrl', [
         $rootScope.checkUserOrReconnect()
         .then ->
             $http.get serverUrl + '/api/games/current'
-            .success ->
+            .success (game) ->
+                $rootScope.currentGame = game
                 $state.go 'play'
             .error ->
                 displayNextGames()
