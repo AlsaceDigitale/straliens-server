@@ -2,24 +2,38 @@
 serverUrl = 'http://' + location.host
 wsUrl = 'ws://' + location.host
 
-App.config (uiGmapGoogleMapApiProvider) ->
-    uiGmapGoogleMapApiProvider.configure {
-        v: '3.17'
-        libraries: 'visualization'
-    }
+App.factory 'authInterceptor', [
+    '$rootScope'
+    '$q'
+    ($rootScope, $q) ->
+        return {
+            request: (config) ->
+                return config
+            response: (res) ->
+                if res.status == 401
+                    # Need to reconnect
+#                    if localStorage.user
+#                    else
+                    delete localStorage.user
+                    console.log 'error'
+                return res or $q.when(res)
+        }
+]
 
 App.config [
     '$httpProvider'
     ($httpProvider) ->
+        # Check for bad auth
+        $httpProvider.interceptors.push 'authInterceptor'
+
         # Use x-www-form-urlencoded Content-Type
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 
         ###*
-        # The workhorse; converts an object to x-www-form-urlencoded serialization.
+        # converts an object to x-www-form-urlencoded serialization.
         # @param {Object} obj
         # @return {String}
         ###
-
         param = (obj) ->
             query = ''
             name = undefined
@@ -52,70 +66,72 @@ App.config [
             if query.length then query.substr(0, query.length - 1) else query
 
         # Override $http service's default transformRequest
-        $httpProvider.defaults.transformRequest = [ (data) ->
-            if angular.isObject(data) and String(data) != '[object File]' then param(data) else data
-        ]
+        $httpProvider.defaults.transformRequest.push (data) ->
+            if data
+                data = JSON.parse data
+                delete data.urlEncoded
+                param(data)
+            else
+                data
 ]
 
-App.config ($stateProvider, $urlRouterProvider) ->
-    $urlRouterProvider.otherwise '/play'
+App.config [
+    '$stateProvider'
+    '$urlRouterProvider'
+    ($stateProvider, $urlRouterProvider) ->
+        $urlRouterProvider.otherwise '/'
 
-    $stateProvider
-    .state 'play',
-        url: '/play'
-        title: 'Accueil'
-        controller: [
-            '$rootScope'
-            '$state'
-            '$http'
-            ($rootScope, $state, $http) ->
-                if !$rootScope.validUser()
-                    $state.go 'login'
-                else
-                    $http.get serverUrl + '/api/games/current'
-                    .success (game) ->
-                        $rootScope.currentGame = game
+        $stateProvider
+        .state 'play',
+            url: '/'
+            controller: [
+                '$rootScope'
+                '$state'
+                ($rootScope, $state) ->
+                    $rootScope.checkUserOrReconnect()
+                        .then ->
+                            if !$rootScope.currentGame then $state.go 'nogame'
+                        , ->
+                                $state.go 'login'
+            ]
 
-                    .error (err) ->
-                        $state.go 'nogame'
-        ]
+        .state 'login',
+            url: '/login'
+            controller: 'loginCtrl'
+            title: 'Login'
+            templateUrl: '/partials/login.html'
 
-    .state 'login',
-        url: '/login'
-        controller: 'loginCtrl'
-        title: 'Login'
-        templateUrl: '/partials/login.html'
+        .state 'signup',
+            url: '/signup'
+            controller: 'signupCtrl'
+            title: 'SignUp'
+            templateUrl: '/partials/signup.html'
 
-    .state 'signup',
-        url: '/signup'
-        controller: 'signupCtrl'
-        title: 'SignUp'
-        templateUrl: '/partials/signup.html'
+        .state 'check',
+            url: '/check/:id'
+            controller: 'checkCtrl'
+            title: 'check'
+            templateUrl: '/partials/check.html'
 
-    .state 'check',
-        url: '/check/:id'
-        controller: 'checkCtrl'
-        title: 'check'
-        templateUrl: '/partials/check.html'
+        .state 'scan',
+            url: '/scan'
+            controller: 'scanCtrl'
+            title: 'scan qr code'
+            templateUrl: '/partials/scan.html'
 
-    .state 'scan',
-        url: '/scan'
-        controller: 'scanCtrl'
-        title: 'scan qr code'
-        templateUrl: '/partials/scan.html'
-
-    .state 'nogame',
-        url: '/nogame'
-        controller: 'nogameCtrl'
-        title: 'no game'
-        templateUrl: '/partials/nogame.html'
+        .state 'nogame',
+            url: '/nogame'
+            controller: 'nogameCtrl'
+            title: 'no game'
+            templateUrl: '/partials/nogame.html'
 
 
-    .state 'endgame',
-        url: '/endgame'
-        controller: 'endgameCtrl'
-        title: 'end game'
-        templateUrl: '/partials/endgame.html'
+        .state 'endgame',
+            url: '/endgame'
+            controller: 'endgameCtrl'
+            title: 'end game'
+            templateUrl: '/partials/endgame.html'
+]
 
 App.factory 'GeolocationService', [
     '$q'
@@ -127,28 +143,15 @@ App.factory 'GeolocationService', [
             if !$window.navigator
                 $rootScope.$apply ->
                     deferred.reject new Error('Geolocation is not supported')
-                    return
             else
                 $window.navigator.geolocation.getCurrentPosition ((position) ->
                     $rootScope.$apply ->
                         deferred.resolve position
-                        return
-                    return
                 ), (error) ->
                     $rootScope.$apply ->
                         deferred.reject error
-                        return
-                    return
             deferred.promise
 ]
-
-# Main controller
-# ---------------
-App.controller 'appCtrl', [
-    '$scope'
-    ($scope) ->
-]
-
 
 # Scan controller
 # ---------------
@@ -156,7 +159,8 @@ App.controller 'scanCtrl', [
     '$rootScope'
     '$scope'
     '$state'
-    ($rootScope, $scope, $state) ->
+    '$q'
+    ($rootScope, $scope, $state, $q) ->
         $scope.videoSources = []
 
         $scope.onSuccess = (data) ->
@@ -168,18 +172,23 @@ App.controller 'scanCtrl', [
             alert "Vous avez refusé l'accès à la camera"
             $state.go 'play'
 
-        if typeof MediaStreamTrack == 'undefined' || typeof MediaStreamTrack.getSources == 'undefined'
-            console.log 'This browser does not support MediaStreamTrack'
-        else
-            MediaStreamTrack.getSources (sources) ->
-                i = 1
-                for source in sources
-                    if (source.kind == 'video')
-                        source.n = i
-                        i++
-                        if source.facing is 'user' then source.name = 'frontale'
-                        else if source.facing is 'environment' then source.name = 'arrière'
-                        $scope.videoSources.push source
+        # Get available video sources on modern browsers
+        $scope.videoSources = $q (resolve) ->
+            if typeof MediaStreamTrack == 'undefined' || typeof MediaStreamTrack.getSources == 'undefined'
+                console.log 'This browser does not support MediaStreamTrack'
+                resolve(['Camera'])
+            else
+                MediaStreamTrack.getSources (sources) ->
+                    videoSources = []
+                    i = 1
+                    for source in sources
+                        if (source.kind == 'video')
+                            source.n = i
+                            i++
+                            if source.facing is 'user' then source.name = 'frontale'
+                            else if source.facing is 'environment' then source.name = 'arrière'
+                            videoSources.push source
+                    resolve videoSources
 ]
 
 
@@ -191,20 +200,19 @@ App.controller 'checkCtrl', [
     '$http'
     '$state'
     'GeolocationService'
-
     ($rootScope, $scope, $http, $state, geolocation) ->
-        $http
-            url: serverUrl + "/api/points/#{$state.params.id}/check/"
-            method: 'GET'
-            withCredentials: true
+        # TODO: geoloc
+        $rootScope.checkUserOrReconnect()
+        .then ->
+            $http
+                url: serverUrl + "/api/points/#{$state.params.id}/check/"
+                method: 'GET'
+                withCredentials: true
 
-        .success (data) ->
-            $rootScope.user.energy = 0
-            $state.go 'play'
-        .error (err) ->
-
-#                if err.type == 'AccessDeniedError'
-#                    relogin $rootScope, $http, $state, action
+            .success (data) ->
+                $rootScope.energy = 0
+                $state.go 'play'
+        , ->
             $state.go 'login'
 
 
@@ -212,13 +220,9 @@ App.controller 'checkCtrl', [
 
 # Notify controller
 # -----------------
-
-
-
 App.controller 'notifCtrl', [
     '$scope'
     'notify'
-
     ($scope, notify) ->
         notify.config {startTop : 0, maximumOpen: 3, templateUrl: "/resources/angular-notify-custom.html"}    
         $scope.shownotify = ->
@@ -226,8 +230,7 @@ App.controller 'notifCtrl', [
 ]
 
 App.controller 'chat', [
-    '$scope',
-
+    '$scope'
     ($scope) ->
         $scope.chatClass = ""
         $scope.tab = "room"
@@ -254,53 +257,68 @@ App.controller 'playCtrl', [
     'uiGmapIsReady'
     '$timeout'
     ($rootScope, $scope, $http, $state, uiGmapIsReady, $timeout) ->
-        if !$rootScope.validUser()
-            $state.go 'login'
-        else
-            $http.get serverUrl + '/api/games/current'
-            .success (game) ->
-                $rootScope.currentGame = game
-                getSide($rootScope, $http, $state)
 
-                fnTimeout = () ->
-                    time = (new Date(game.endTime) - new Date(Date.now()))
+        initGame = ->
+            $rootScope.checkUserOrReconnect()
+            .then ->
+                # if valid user, check if there is a game running
+                $http.get serverUrl + '/api/games/current'
+                .success (game) ->
+                    $rootScope.currentGame = game
 
-                    diff = Math.floor(time / 1000)
-                    secs_diff = diff % 60
-                    diff = Math.floor(diff / 60)
-                    mins_diff = diff % 60
-                    diff = Math.floor(diff / 60)
-                    hours_diff = diff
-                    diff = Math.floor(diff / 24)
+                    # Get user's side
+                    $http
+                        url: serverUrl + "/api/users/#{$rootScope.user.id}/side"
+                    .success (side) ->
+                        if side == "EARTHLINGS" then side = "TERRIENS"
+                        $rootScope.side = side
 
-                    $rootScope.endTime = if time > 0 then "#{(if hours_diff<10 then '0' else '') + hours_diff}:#{(if mins_diff<10 then '0' else '') + mins_diff}:#{(if secs_diff<10 then '0' else '') + secs_diff}" else "00:00:00"
-                    if time > 0
-                        $rootScope.hourTimeout  = $timeout fnTimeout, 1000
-                    else
-                        $state.go 'endgame'
 
-                $rootScope.hourTimeout  = $timeout fnTimeout, 1000
+                    # Get all the points
+                    $http.get serverUrl + "/api/points"
+                    .success (data) ->
+                        $rootScope.points = data
+                        $rootScope.points.forEach (point) ->
+                            $http.get serverUrl + "/api/points/"+ point.id
+                            .success (data) ->
+                                point.coordinates = { latitude: point.lat, longitude: point.lng }
+                                if data.type == 'cathedrale'
+                                    point.options = {
+                                        labelContent: Math.abs(data.energy) || '0'
+                                        labelClass: 'map-label-cathedrale'
+                                    }
+                                else
+                                    point.options = {
+                                        labelContent: Math.abs(data.energy) || '0'
+                                        labelClass: 'map-label side-' + data.side
+                                    }
+                                point.icon =
+                                    path: ''
+                                point.data = data
 
-                $http.get serverUrl + "/api/points"
-                .success (data) ->
-                    $rootScope.points = data
-                    $rootScope.points.forEach (point) ->
-                        $http.get serverUrl + "/api/points/"+ point.id
-                        .success (data) ->
-                            point.coordinates = { latitude: point.lat, longitude: point.lng }
-                            if data.type == 'cathedrale'
-                                point.options = {
-                                    labelContent: Math.abs(data.energy) || '0'
-                                    labelClass: 'map-label-cathedrale'
-                                }
-                            else
-                                point.options = {
-                                    labelContent: Math.abs(data.energy) || '0'
-                                    labelClass: 'map-label side-' + data.side
-                                }
-                            point.icon =
-                                path: ''
-                            point.data = data
+
+                    # Manage the clock
+                    fnTimeout = () ->
+                        time = (new Date(game.endTime) - new Date(Date.now()))
+
+                        diff = Math.floor(time / 1000)
+                        secs_diff = diff % 60
+                        diff = Math.floor(diff / 60)
+                        mins_diff = diff % 60
+                        diff = Math.floor(diff / 60)
+                        hours_diff = diff
+                        diff = Math.floor(diff / 24)
+
+                        $rootScope.endTime = if time > 0 then "#{(if hours_diff<10 then '0' else '') + hours_diff}:#{(if mins_diff<10 then '0' else '') + mins_diff}:#{(if secs_diff<10 then '0' else '') + secs_diff}" else "00:00:00"
+                        if time > 0
+                            $rootScope.hourTimeout  = $timeout fnTimeout, 1000
+                        else
+                            $state.go 'endgame'
+                    $rootScope.hourTimeout  = $timeout fnTimeout, 1000
+            , ->
+                $state.go 'login'
+
+        initGame()
 
         $scope.map =
             zoom: 15
@@ -345,10 +363,11 @@ App.controller 'playCtrl', [
 
                         map.panTo {lat: Y, lng: X}
 
+        # Wait for the map to be ready before binding the socket's event
         uiGmapIsReady.promise().then ->
             $rootScope.socket.on 'score:update', (userScore, teamScore) ->
-                $rootScope.user.score = userScore
-                $rootScope.team.score = teamScore
+                $rootScope.score = userScore
+                $rootScope.teamScore = teamScore
                 $rootScope.$apply()
 
             $rootScope.socket.on 'point:update', (data) ->
@@ -362,7 +381,7 @@ App.controller 'playCtrl', [
                     point.data = data.gamePoint
 
             $rootScope.socket.on 'user:update', (data) ->
-                if data.energy then $rootScope.user.energy = data.energy
+                if data.energy then $rootScope.energy = data.energy
                 $rootScope.$apply()
 ]
 
@@ -372,44 +391,19 @@ App.controller 'loginCtrl', [
     '$state'
     '$http'
     ($rootScope, $scope, $state, $http) ->
-        $scope.showTeamPwd = false
-
-        if $rootScope.validUser()
+        $rootScope.checkUserOrReconnect()
+        .then ->
             $state.go 'play'
-
-        $scope.onSelect = ($item) ->
-            $scope.team = $item
-            $scope.showTeamPwd = true
+        , null
 
         $scope.validate = (form) ->
-            $http
-                url: serverUrl + "/api/services/login?sections=team",
-                method: "POST"
-                withCredentials: true
-
-                data:
-                    nickname: form.nickname
-                    password: form.password
-            
-            .success (data) ->
-                $rootScope.user.id = data.id
-                $rootScope.user.name = data.nickname
-                $rootScope.user.teamId = data.teamId
-                $rootScope.user.team = data.team
-                $rootScope.user.password = form.password
-
-                localStorage.user = JSON.stringify $rootScope.user
-                getSide($rootScope, $http, $state)
-
-                $rootScope.updateVitals()
-
-                $rootScope.socket.disconnect()
-                $rootScope.socket = io wsUrl
-
-                window.location.reload true
+            $rootScope.login
+                nickname: form.nickname
+                password: form.password
+            .success (user) ->
                 $state.go 'play'
-            .error (data) ->
-                if data.type == 'AuthenticationError'
+            .error (err) ->
+                if err.type == 'AuthenticationError'
                     $scope.error = true
 ]
 
@@ -420,9 +414,6 @@ App.controller 'signupCtrl', [
     '$state'
     '$http'
     ($rootScope, $scope, $state, $http) ->
-        if $rootScope.validUser()
-            $state.go 'play'
-
         $scope.teams = []
 
         $scope.errors = {}
@@ -453,14 +444,14 @@ App.controller 'signupCtrl', [
                         teamPassword: user.teamPassword
                         teamId: user.teamId
                 .success (data) ->
-                    $rootScope.user.id = data.id
-                    $rootScope.user.name = data.nickname
-                    $rootScope.user.teamId = data.teamId
-                    $rootScope.user.team = data.team
-                    $rootScope.user.password = form.password
-
-                    localStorage.user = JSON.stringify $rootScope.user
-                    getSide($rootScope, $http, $state)
+                    user =
+                        id: data.id
+                        name: data.nickname
+                        teamId: data.teamId
+                        team: data.team
+                        password: form.password
+                    $rootScope.user = user
+                    saveUser user
 
                     $rootScope.updateVitals()
 
@@ -505,22 +496,24 @@ App.controller 'nogameCtrl', [
     '$state'
     '$http'
     ($rootScope, $scope, $state, $http) ->
-        if !$rootScope.validUser()
-            $state.go 'login'
-        else if $rootScope.currentGame
-            $state.go 'play'
-
-        $http.get serverUrl + '/api/games'
-        .success (games) ->
-            $scope.games = games
-            $scope.games.forEach (game, key) ->
-                if new Date(game.startTime) <= new Date Date.now()
-                    $scope.games.splice key, 1
-                else
+        displayNextGames = ->
+            $http.get serverUrl + '/api/games'
+            .success (games) ->
+                $scope.games = []
+                for game in games when new Date(game.startTime) <= new Date Date.now()
                     game.startDate = moment(new Date(game.startTime)).format "dddd Do MMMM HH:mm"
                     game.endDate = moment(new Date(game.endTime)).format "HH:mm"
-        .error (data) ->
-            $state.go 'nogame'
+                    games.push game
+
+        $rootScope.checkUserOrReconnect()
+        .then ->
+            $http.get serverUrl + '/api/games/current'
+            .success ->
+                $state.go 'play'
+            .error ->
+                displayNextGames()
+        , ->
+            displayNextGames()
 ]
 
 
@@ -530,6 +523,9 @@ App.controller 'endgameCtrl', [
     '$state'
     '$http'
     ($rootScope, $scope, $state, $http) ->
+        $rootScope.checkUserOrReconnect()
+        .success ->
+
         if !$rootScope.validUser()
             $state.go 'login'
 
@@ -548,114 +544,100 @@ App.run [
     '$window'
     '$http'
     'notify'
-    ($rootScope, $state, $window, $http, notify) ->
+    '$q'
+    ($rootScope, $state, $window, $http, notify, $q) ->
         $rootScope.$state = $state
         $rootScope.$http = $http
 
-
         $rootScope.endTime = '00:00:00'
-        $rootScope.points = {}
+        $rootScope.score = null
+        $rootScope.energy = null
+        $rootScope.teamScore = null
 
-        $rootScope.logged = false
-
-        $rootScope.$watch 'logged', (newValue, oldValue) ->
-            if newValue == false && (JSON.parse localStorage.user).id
-                relogin $rootScope, $http, $state
-
-        $http
-            url: serverUrl + '/api/services/logged-in'
-            withCredentials: true
-
-        .success (status) ->
-            if localStorage.user and (JSON.parse localStorage.user).id
-                user = JSON.parse localStorage.user
-                if status == true and
-                    $rootScope.user = user
-                else
-
-            else
-                delete localStorage.user
-
-        $rootScope.user =
-            team: null
-            teamId: -1
-            score: 0
-            energy: 0
-            id: null
-
-        $rootScope.team =
-            score: 0
+        $rootScope.user = {}
+        # Auto update stored user data
 
         $rootScope.side = 'NEUTRE'
 
-        $rootScope.socket = io wsUrl
+        $rootScope.points = {}
 
+        # Check if user should have a session or reconnect him if still in localStorage
+        $rootScope.checkUserOrReconnect = ->
+            $q (resolve, reject) ->
+                $http
+                    url: serverUrl + '/api/services/logged-in'
+                    withCredentials: true
+                .success (status) ->
+                    if localStorage.user
+                        user = JSON.parse localStorage.user
+                        if status == true and angular.isObject user
+                            $rootScope.user = user
+                            saveUser user
+                            resolve(user)
+                        else
+                            $rootScope.login
+                                nickname: user.nickname
+                                password: user.password
+                            .success (user) ->
+                                resolve(user)
+                            .error ->
+                                reject()
+                                delete localStorage.user
+                    else
+                        delete localStorage.user
+                        reject()
+
+        # Handle websockets
+        $rootScope.socket = io wsUrl
         $rootScope.socket.on 'notification:send', (data) ->
             notify "Hello there "+data
-            
-        $rootScope.validUser = () ->
-            user = null
-            if localStorage.user
-                user = JSON.parse localStorage.user
-                if user && user.id && !$rootScope.user.id
-                    $rootScope.user = user
-            return !!(user && user.id)
-        
+
+        # Login with user.nickname and user.password
+        # Store user in localStorage then update some infos
+        # Reconnect to the socket with the new session
+        $rootScope.login = (user) ->
+            $http
+                url: serverUrl + "/api/services/login?sections=team",
+                method: "POST"
+                withCredentials: true
+                data:
+                    nickname: user.nickname
+                    password: user.password
+                    urlEncoded: true
+            .success (res) ->
+                res.password = user.password
+
+                $rootScope.user = res
+                saveUser res
+
+                $rootScope.updateVitals()
+
+                $rootScope.socket.disconnect()
+                $rootScope.socket = io wsUrl
+
+
+        # Update user infos if there is a game running
         $rootScope.updateVitals = ->
             $http
                 url: serverUrl + "/api/users/me",
                 method: "GET"
                 withCredentials: true
-
             .success (data) ->
                 if data.gameUser
-                    if data.gameUser.energy then $rootScope.user.energy = data.gameUser.energy
-                    if data.gameUser.score then $rootScope.user.score = data.gameUser.score
+                    if data.gameUser.energy then $rootScope.energy = data.gameUser.energy
+                    if data.gameUser.score then $rootScope.score = data.gameUser.score
                 if data.gameTeam
-                    if data.gameTeam.score then $rootScope.team.score = data.gameTeam.score
+                    if data.gameTeam.score then $rootScope.teamScore = data.gameTeam.score
 
-        $rootScope.updateVitals()
+
+        # Start something...
+        # Connect user if available and update all the infos
+        $rootScope.checkUserOrReconnect()
+        .then ->
+            $rootScope.updateVitals()
+        , ->
+            $state.go 'login'
 ]
 
-getSide = ($rootScope, $http, $state) ->
-    if $rootScope.validUser() and $rootScope.currentGame
-        $http
-            url: serverUrl + "/api/users/#{$rootScope.user.id}/side"
-        .success (side) ->
-            if side == "EARTHLINGS"
-                side = "TERRIENS"
-            $rootScope.side = side
-        .error (err) ->
-            if err.type == 'AccessDeniedError'
-                relogin $rootScope, $http, $state
-
-relogin = ($rootScope, $http, $state, callback) ->
-    user = JSON.parse localStorage.user
-    if user && user.id
-        $http
-            url: serverUrl + "/api/services/login?sections=team",
-            method: "POST"
-            data:
-                nickname: user.name
-                password: user.password
-
-        .success (data) ->
-            $rootScope.user.id = data.id
-            $rootScope.user.name = data.nickname
-            $rootScope.user.teamId = data.teamId
-            $rootScope.user.team = data.team
-            $rootScope.user.password = user.password
-
-            localStorage.user = JSON.stringify $rootScope.user
-            getSide $rootScope, $http, $state
-
-            $rootScope.updateVitals()
-
-            $rootScope.socket.disconnect()
-            $rootScope.socket = io wsUrl
-            if typeof callback is 'function'
-                callback()
-
-            $state.go 'play'
-        .error (data) ->
-            $state.go 'login'
+saveUser = (user) ->
+    localStorage.user = JSON.stringify user

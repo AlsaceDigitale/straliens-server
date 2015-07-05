@@ -2,6 +2,8 @@
     .nogame
         .wrapper.col-xs-12.col-sm-6.col-sm-offset-3
             h1.center Aucune partie en cours
-            div(ng-if="games")
+            div(ng-show="games.length > 0")
                 h2 Programme des parties
                 h3(ng-repeat="game in games") {{game.startDate}} - {{game.endDate}}
+            div(ng-hide="games.length > 0")
+                h2 Il n'y a plus aucune partie de prévue

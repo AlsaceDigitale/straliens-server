@@ -103,7 +103,7 @@ tuneResponses = (app) ->
 
         res.pleaseLoginError = (message, additionalData = {}) ->
             message or= 'Accès refusé: vous devez vous connecter pour avoir accès à cette fonctionnalité'
-            res.genericError message, 'AccessDeniedError', 403, additionalData
+            res.genericError message, 'AccessDeniedError', 401, additionalData
 
         res.validationError = (errors) ->
             res.genericError 'Le formulaire comporte des champs erronés.', 'ValidationError', 400, errors
