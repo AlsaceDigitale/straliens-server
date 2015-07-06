@@ -87,10 +87,13 @@ App.config [
             controller: [
                 '$rootScope'
                 '$state'
-                ($rootScope, $state) ->
+                '$http'
+                ($rootScope, $state, $http) ->
                     $rootScope.checkUserOrReconnect()
                         .then ->
-                            if !$rootScope.currentGame then $state.go 'nogame'
+                            $http.get serverUrl + '/api/games/current'
+                            .error ->
+                                $state.go 'nogame'
                         , ->
                                 $state.go 'login'
             ]
@@ -111,7 +114,6 @@ App.config [
             url: '/check/:id'
             controller: 'checkCtrl'
             title: 'check'
-            templateUrl: '/partials/check.html'
 
         .state 'scan',
             url: '/scan'
@@ -382,11 +384,7 @@ App.controller 'playCtrl', [
             $rootScope.socket.on 'point:update', (data) ->
                 point = p for p in $scope.points when p.id == data.point.id
                 if point
-                    point.options = {
-                        labelAnchor: '0 0'
-                        labelContent: Math.abs(data.gamePoint.energy) || '0'
-                        labelClass: 'map-label side-' + data.gamePoint.side
-                    }
+                    point.options.labelContent = Math.abs(data.gamePoint.energy) || '0'
                     point.data = data.gamePoint
 
             $rootScope.socket.on 'user:update', (data) ->
