@@ -1,3 +1,4 @@
+global._ = require 'lodash'
 # modules
 express = require 'express'
 nodeHttp = require 'http'

@@ -10,8 +10,8 @@ Point = db.orm.define 'Point',
         autoIncrement: true
     name: Sequelize.STRING
     address: Sequelize.STRING
-    lat: Sequelize.FLOAT
-    lng: Sequelize.FLOAT
+    latitude: Sequelize.FLOAT
+    longitude: Sequelize.FLOAT
     code: Sequelize.STRING 8
 
 #export

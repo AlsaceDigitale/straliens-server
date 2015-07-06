@@ -388,21 +388,33 @@ App.controller 'playCtrl', [
                 $rootScope.teamScore = teamScore
                 $rootScope.$apply()
 
-            $scope.catheEnergy = 0
+            $rootScope.socket.on 'points:update', (data) ->
+                points = []
+                for pnt in data
+                    point = pnt.point
+                    gamePoint = pnt.gamePoint
+                    point.options = {}
+
+                    if gamePoint.type != 'cathedrale'
+                        point.options.labelClass = 'map-label side-' + gamePoint.side
+                        point.options.labelContent = gamePoint.absEnergy || '0'
+                    else
+                        point.options.labelClass = 'map-label-cathedrale'
+                        point.options.labelContent = gamePoint.energy || '0'
+                    point.data = gamePoint
+                    points.push point
+                $rootScope.points = points
+
             $rootScope.socket.on 'point:update', (data) ->
                 point = p for p in $rootScope.points when p.id == data.point.id
                 if point
                     if data.gamePoint.type == 'cathedrale'
-                        $timeout ->
-                            point.options.labelContent = $scope.catheEnergy
-                            $scope.catheEnergy = 0
-                        , 200
+                        point.options.labelContent = data.gamePoint.energy || '0'
                     else
-                        point.options.labelContent = Math.abs(data.gamePoint.energy) || '0'
                         point.options.labelClass = 'map-label side-' + data.gamePoint.side
-                        $scope.catheEnergy += data.gamePoint.energy
-                    point.data = data.gamePoint
+                        point.options.labelContent = data.gamePoint.absEnergy || '0'
 
+                    point.data = data.gamePoint
 
             $rootScope.socket.on 'user:update', (data) ->
                 if data.energy then $rootScope.energy = data.energy

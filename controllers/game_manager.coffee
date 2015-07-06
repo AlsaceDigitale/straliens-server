@@ -18,7 +18,7 @@ class GameManager
         userScoreUpd = "score + #{constants.score.checkPoint.user}"
         teamScoreUpd = "score + #{constants.score.checkPoint.team}"
 
-        @onGamePointChange gamePoint
+        @sendUpdatedPoint gamePoint
 
         GameUser.update score: Sequelize.literal(userScoreUpd),
             where:
@@ -39,9 +39,18 @@ class GameManager
                         ws.sendToUser id: gameUser.userId, "score:update", gameUser.score, gameTeam.score
                         cb gameUser, gameTeam
 
-    onGamePointChange: (gamePoint) ->
-        gamePoint.getPoint().then (point) ->
+    sendUpdatedPoint: (gamePoint) =>
+        gamePoint.getPoint()
+        .then (point) ->
             ws.broadcast "point:update", gamePoint: gamePoint, point: point
+
+    sendUpdatedGamePoints: (gamePoints) ->
+        Promise.all _.map gamePoints, (gamePoint) ->
+            gamePoint.getPoint()
+            .then (point) ->
+                return {point: point, gamePoint: gamePoint}
+        .then (data) ->
+            ws.broadcast "points:update", data
 
     onGameUserChange: (gameUser) ->
         ws.sendToUser id: gameUser.userId, "user:update", energy: gameUser.energy

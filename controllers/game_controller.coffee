@@ -25,7 +25,7 @@ class GameController
         SELECT 0 as 'count(*)', "EARTHLINGS" as 'side' ) sides ) x group by side;
         """
         db.orm.query sql, type: Sequelize.QueryTypes.SELECT
-        .then (data) ->
+        .then (data) =>
             ret =
                 EARTHLINGS: 0
                 STRALIENS: 0
@@ -49,32 +49,66 @@ class GameController
             .done (users) =>
                 if !users or !currentGame then return
                 for user in users
-                    @getGameUser currentGame, user.dataValues, (gameUser) ->
+                    @getGameUser currentGame, user.dataValues
+                    .then (gameUser) =>
                         GameUser.update energy: Sequelize.literal(userEnergyUpd),
                             where: id: gameUser.id
-                        .done ->
+                        .done =>
                             GameUser.findOne
                                 where: id: gameUser.id
-                            .done (gameUser) ->
+                            .done (gameUser) =>
                                 gameManager.onGameUserChange gameUser
 
     manageEnergyPoint: =>
         logger.info 'controller: Managing energy for points'
-        pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
         @currentGame (currentGame) =>
             Point.findAll({}).done (points) =>
                 if !points or !currentGame then return
-                for point in points
-                    @getGamePoint point.dataValues, currentGame, (gamePoint) =>
-                        #console.log "gamePoint #{gamePoint.id}"
-                        GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
-                            where: id: gamePoint.id
-                        .done ->
-                            GamePoint.findOne
-                                where: id: gamePoint.id
-                            .done (gamePoint) ->
-                                gameManager.onGamePointChange gamePoint
 
+                energySum = 0
+                updatedGamePoints = _.map points, (point) =>
+                    gpnt = null
+                    @getGamePoint point.dataValues, currentGame
+                    .then (gamePoint) =>
+                        gpnt = gamePoint
+                        return gamePoint if gamePoint.type is 'cathedrale'
+
+                        if gamePoint.energy > 0
+                            pointEnergyUpd = "GREATEST(0,LEAST(#{constants.energy.point.maxValue}, energy - #{constants.energy.point.valueDecay}))"
+                        else
+                            pointEnergyUpd = "LEAST(0,GREATEST(-#{constants.energy.point.maxValue}, energy + #{constants.energy.point.valueDecay}))"
+                        return GamePoint.update energy: Sequelize.literal(pointEnergyUpd),
+                            where: id: gamePoint.id
+                    .then =>
+                        if gpnt.type is not 'cathedrale' then energySum += gpnt.energy
+                Promise.all updatedGamePoints
+                .then =>
+                    @updateCathedrale currentGame
+                .then =>
+                    GamePoint.findAll
+                        where: gameId : currentGame.id
+                .then (gamePoints) =>
+                    gameManager.sendUpdatedGamePoints gamePoints
+
+    updateCathedrale: =>
+        @currentGame()
+        .then (currentGame) =>
+            GamePoint.sum 'energy',
+                where: Sequelize.and
+                    gameId: currentGame.id
+                    type: null
+            .then (energy) =>
+                GamePoint.update energy: energy,
+                    where:
+                        type: 'cathedrale'
+                        gameId: currentGame.id
+            .then =>
+                GamePoint.findOne
+                    where:
+                        type: 'cathedrale'
+                        gameId: currentGame.id
+            .then (cathedrale) =>
+                gameManager.sendUpdatedPoint cathedrale
 
     assignTeams: =>
         logger.info 'controller: Assign teams'
@@ -89,83 +123,89 @@ class GameController
                             GameTeam.update side: nextTeam,
                                 where: id: gameTeam.dataValues.id
 
-    currentGame: (callback) ->
+    currentGame: (callback) =>
         now = new Date
         Game.findOne
             where:
                 startTime: $lt: now
                 endTime: $gt: now
-        .done callback
+        .then callback
 
-    getGamePoint: (point, game, callback) ->
+    getGamePoint: (point, game) =>
         GamePoint.findOrCreate
             where:
                 pointId: point.id
                 gameId: game.id
             defaults:
                 energy: 0
-        .done (gamePoint) ->
-            callback gamePoint[0]
+        .then (gamePoint) =>
+            gamePoint[0]
 
-    getGameUser: (game, user, cb) ->
+    getGameUser: (game, user, cb) =>
         GameUser.findOrCreate
             defaults: score: 0
             where:
                 userId: user.id
                 gameId: game.id
-        .done (gameUser) ->
-            cb gameUser[0]
+        .then (gameUser) =>
+            gameUser[0]
 
-    getGameTeamForTeam: (game, team, cb) ->
+    getGameTeamForTeam: (game, team, cb) =>
         GameTeam.findOrCreate
             where:
                 teamId: team.id
                 gameId: game.id
-        .done (gameTeam) ->
+        .done (gameTeam) =>
             cb gameTeam[0]
 
-    getGameTeamForUser: (game, user, cb) ->
+    getGameTeamForUser: (game, user, cb) =>
         GameTeam.findOrCreate
             where:
                 teamId: user.teamId
                 gameId: game.id
-        .done (gameTeam) ->
-            cb gameTeam[0]
+        .then (gameTeam) =>
+            gameTeam[0]
 
-    checkPoint: (user, game, point, lat, lng, useGPS, cb) ->
-        @getGamePoint point, game, (gamePoint) =>
-            @getGameUser game, user, (gameUser) =>
+    checkPoint: (user, game, point, lat, lng, useGPS, cb) =>
+        @getGamePoint point, game
+        .then (gamePoint) =>
+            gameUser = null
+            gameTeam = null
+            @getGameUser game, user
+            .then (guser) =>
+                gameUser = guser
                 # Check if coordinates are right
                 if useGPS
-                    if @checkCoordinates(lat, lng, point.dataValues.lat, point.dataValues.lng, 200) == false
+                    if @checkCoordinates(lat, lng, point.dataValues.latitude, point.dataValues.longitude, 200) == false
                         console.log "Rejecting checkin of point #{point.id} with coords #{lat} #{lng} by user #{user.id}"
                         return
-                @getGameTeamForUser game, user, (gameTeam) ->
-                    GameUser.update
-                        energy: 0
-                    ,
-                        where:
-                            id: gameUser.id
-                    logger.info "Current user team side is #{gameTeam.side}"
-                    expr=if gameTeam.side == Team.sides.STRALIENS then "energy + #{gameUser.energy}" else "energy - #{gameUser.energy}"
-                    GamePoint.update
-                        energy: Sequelize.literal(expr)
-                    ,
-                        where:
-                            id: gamePoint.id
-                    .done =>
-                        GamePoint.find
-                            where:
-                                id: gamePoint.id
-                        .done (gamePoint) ->
-                            gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) ->
-                                cb gameUser, gameTeam, gamePoint
+                @getGameTeamForUser game, user
+            .then (gteam) =>
+                gameTeam = gteam
+                GameUser.update energy: 0,
+                    where:
+                        id: gameUser.id
+                logger.info "Current user team side is #{gameTeam.side}"
+                expr=if gameTeam.side == Team.sides.STRALIENS then "energy + #{gameUser.energy}" else "energy - #{gameUser.energy}"
+                GamePoint.update energy: Sequelize.literal(expr),
+                    where:
+                        id: gamePoint.id
+            .then =>
+                @updateCathedrale game
+                gameManager.sendUpdatedPoint
+            .then =>
+                GamePoint.find
+                    where:
+                        id: gamePoint.id
+            .then (gamePoint) =>
+                gameManager.onPointCheckin game, gameUser, gameTeam, gamePoint, (gameUser, gameTeam) =>
+                    cb gameUser, gameTeam, gamePoint
 
     # Checks if coordinates are inside radius of a point
     # uLat, uLng are the coordinates of the moving point
     # tLat, tLng are the coordinates of the fixed target.
     # delta is the radius around the fixed target where we consider we are in range (In meter)
-    checkCoordinates: (uLat, uLng, tLat, tLng, delta) ->
+    checkCoordinates: (uLat, uLng, tLat, tLng, delta) =>
         return false unless delta > 0
         earthRadius = 6372.8 # Km
         uLat = uLat/180 * Math.PI

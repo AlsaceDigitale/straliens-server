@@ -22,9 +22,9 @@ html(ng-app="straliens")
                     events="map.events")
                     ui-gmap-markers(
                         models="points"
-                        coords="'coordinates'"
+                        coords="'self'"
                         options="'options'"
-                        icon="'icon'"
+                        icon="{path:''}"
                         control="markers")
 
             //div(ng-controller="chat")       
