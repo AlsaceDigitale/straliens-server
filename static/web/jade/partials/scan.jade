@@ -1,9 +1,9 @@
 .overlay
     .nogame
         .wrapper.col-xs-12.col-sm-6.col-sm-offset-3
-            a
-                h2(ui-sref="play") FERMER
-            select.col-xs-12.col-sm-6.col-sm-offset-3(ng-model="source")
-                option(ng-repeat="source in videoSources" ng-value="source.id") Camera {{ source.name || source.n }}
-            qr-scanner(ng-success="onSuccess(data)" ng-video-error="onError(data)" ng-video-source="source" width="100%" height="auto")
+            a(ui-sref="play")
+                h2 FERMER
+            select.col-xs-12.col-sm-6.col-sm-offset-3(ng-model="source" ng-options="source as 'Camera ' + source.n for source in videoSources")
+                option Camera {{ source.name || source.n }}
+            qr-scanner(ng-success="onSuccess(data)" ng-video-error="onError(data)" ng-video-source="source.id" width="100%" height="auto")
             h1 {{data}}

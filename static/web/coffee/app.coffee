@@ -161,7 +161,8 @@ App.controller 'scanCtrl', [
     '$state'
     '$q'
     ($rootScope, $scope, $state, $q) ->
-        $scope.videoSources = []
+        $scope.source =
+            id: null
 
         $scope.onSuccess = (data) ->
             $scope.data = data
@@ -173,10 +174,12 @@ App.controller 'scanCtrl', [
             $state.go 'play'
 
         # Get available video sources on modern browsers
-        $scope.videoSources = $q (resolve) ->
+        getSources = ->
+            deferred = $q.defer()
+
             if typeof MediaStreamTrack == 'undefined' || typeof MediaStreamTrack.getSources == 'undefined'
                 console.log 'This browser does not support MediaStreamTrack'
-                resolve(['Camera'])
+                deferred.resolve(['Camera'])
             else
                 MediaStreamTrack.getSources (sources) ->
                     videoSources = []
@@ -188,7 +191,14 @@ App.controller 'scanCtrl', [
                             if source.facing is 'user' then source.name = 'frontale'
                             else if source.facing is 'environment' then source.name = 'arrière'
                             videoSources.push source
-                    resolve videoSources
+                    deferred.resolve videoSources
+
+            return deferred.promise
+
+        getSources().then (sources) ->
+            $scope.videoSources = sources
+            $scope.source = $scope.videoSources[0]
+
 ]
 
 
