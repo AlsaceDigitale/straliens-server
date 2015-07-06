@@ -84,7 +84,7 @@ html(ng-app="straliens")
 
             footer(ng-hide="side == 'NEUTRE'")
                 .wrapper
-                    span.msg ENERGIE {{user.energy || 0}}
+                    span.msg ENERGIE {{energy || 0}}
                     span.time {{endTime}}
                     .side {{side | uppercase}}
 
