@@ -37,6 +37,7 @@ module.exports = (app) ->
                 Point.findOne
                     where: code: req.params.code
                 .done (point) ->
+                    return res.notFoundError() unless point
                     GameController.checkPoint user, current_game, point, lat, lng, useGPS,(game_user, game_team, game_point) ->
                         res.json
                             game_user: game_user

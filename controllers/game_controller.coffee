@@ -99,7 +99,6 @@ class GameController
 
     getGamePoint: (point, game, callback) ->
         GamePoint.findOrCreate
-            defaults: energy: 0
             where:
                 pointId: point.id
                 gameId: game.id
