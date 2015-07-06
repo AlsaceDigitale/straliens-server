@@ -274,13 +274,17 @@ App.controller 'playCtrl', [
         $http.get serverUrl + "/api/points"
         .success (data) ->
             $rootScope.points = data
+            cathedraleEnergy = 0
+            cathedrale = null
             $rootScope.points.forEach (point) ->
                 $http.get serverUrl + "/api/points/"+ point.id
                 .success (data) ->
                     point.coordinates = { latitude: point.lat, longitude: point.lng }
+                    point.data = data
                     if data.type == 'cathedrale'
+                        cathedrale = point
                         point.options = {
-                            labelContent: Math.abs(data.energy) || '0'
+                            labelContent: cathedraleEnergy || 0
                             labelClass: 'map-label-cathedrale'
                         }
                     else
@@ -288,9 +292,12 @@ App.controller 'playCtrl', [
                             labelContent: Math.abs(data.energy) || '0'
                             labelClass: 'map-label side-' + data.side
                         }
+                        if cathedrale
+                            cathedrale.options.labelContent += data.energy
+                        else
+                            cathedraleEnergy += data.energy
                     point.icon =
                         path: ''
-                    point.data = data
 
         initGame = ->
             $rootScope.checkUserOrReconnect()
@@ -381,14 +388,22 @@ App.controller 'playCtrl', [
                 $rootScope.teamScore = teamScore
                 $rootScope.$apply()
 
+            $scope.catheEnergy = 0
             $rootScope.socket.on 'point:update', (data) ->
-                point = p for p in $scope.points when p.id == data.point.id
+                point = p for p in $rootScope.points when p.id == data.point.id
                 if point
-                    point.options.labelContent = Math.abs(data.gamePoint.energy) || '0'
+                    if data.gamePoint.type == 'cathedrale'
+                        $timeout ->
+                            point.options.labelContent = $scope.catheEnergy
+                            $scope.catheEnergy = 0
+                        , 200
+                    else
+                        point.options.labelContent = Math.abs(data.gamePoint.energy) || '0'
+                        $scope.catheEnergy += data.gamePoint.energy
                     point.data = data.gamePoint
 
+
             $rootScope.socket.on 'user:update', (data) ->
-                console.log data
                 if data.energy then $rootScope.energy = data.energy
                 $rootScope.$apply()
 ]
@@ -604,7 +619,6 @@ App.run [
         $rootScope.socket = io wsUrl
 
         fnTimeout = ->
-            console.log $rootScope.socket.connected
             if !$rootScope.socket.connected
                 $timeout ->
                     window.location.reload false
