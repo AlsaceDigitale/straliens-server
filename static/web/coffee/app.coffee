@@ -399,6 +399,7 @@ App.controller 'playCtrl', [
                         , 200
                     else
                         point.options.labelContent = Math.abs(data.gamePoint.energy) || '0'
+                        point.options.labelClass = 'map-label side-' + data.gamePoint.side
                         $scope.catheEnergy += data.gamePoint.energy
                     point.data = data.gamePoint
 
