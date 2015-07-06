@@ -105,9 +105,19 @@
             align-items: center
             justify-content: center
             background: rgba($black, 0.7)
+            &.side-STRALIENS
+                border-color: $green
+                color: $green
+            &.side-EARTHLINGS
+                border-color: $blue
+                color: $blue
+            &.side-NEUTRAL
+                border-color: $grey
+                color: $grey
         .map-label-cathedrale
-            font-family: "Lucida Grande", "Arial", sans-serif
-            font-size: 16px
+            font-family: "BebasNeue", "Arial", sans-serif
+            font-size: 25px
+            font-weight: bold
             white-space: nowrap
             transform: translate(-50%, -50%)
             height: 45px
@@ -116,17 +126,15 @@
             display: flex !important
             align-items: center
             justify-content: center
-            background: url('/resources/cathedrale.png') no-repeat
+            background-image: url('/resources/cathedrale.png')
+            background-repeat: no-repeat
             background-position: center
             background-size: contain
-            padding-top: 20px
-        .Side-STRALIENS
-            border-color: $green
-            color: $green
-        .side-EARTHLINGS
-            border-color: $blue
-            color: $blue
-        .side-NEUTRAL
-            border-color: $grey
-            color: $grey
+            padding-top: 25px
+            border-radius: 50px 50px 0 0
+            &.side-STRALIENS
+                background-color: rgba(10, 199, 20, 0.5)
+            &.side-EARTHLINGS
+                background-color: rgba(10, 170, 199, 0.5)
+
 

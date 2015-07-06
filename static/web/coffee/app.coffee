@@ -274,28 +274,21 @@ App.controller 'playCtrl', [
         $http.get serverUrl + "/api/points"
         .success (data) ->
             $rootScope.points = data
-            cathedraleEnergy = 0
-            cathedrale = null
             $rootScope.points.forEach (point) ->
                 $http.get serverUrl + "/api/points/"+ point.id
                 .success (data) ->
                     point.coordinates = { latitude: point.lat, longitude: point.lng }
                     point.data = data
                     if data.type == 'cathedrale'
-                        cathedrale = point
                         point.options = {
-                            labelContent: cathedraleEnergy || 0
-                            labelClass: 'map-label-cathedrale'
+                            labelContent: data.absEnergy || '0'
+                            labelClass: 'map-label-cathedrale side-' + data.side
                         }
                     else
                         point.options = {
-                            labelContent: Math.abs(data.energy) || '0'
+                            labelContent: data.absEnergy || '0'
                             labelClass: 'map-label side-' + data.side
                         }
-                        if cathedrale
-                            cathedrale.options.labelContent += data.energy
-                        else
-                            cathedraleEnergy += data.energy
                     point.icon =
                         path: ''
 
@@ -399,8 +392,8 @@ App.controller 'playCtrl', [
                         point.options.labelClass = 'map-label side-' + gamePoint.side
                         point.options.labelContent = gamePoint.absEnergy || '0'
                     else
-                        point.options.labelClass = 'map-label-cathedrale'
-                        point.options.labelContent = gamePoint.energy || '0'
+                        point.options.labelClass = 'map-label-cathedrale side-' + gamePoint.side
+                        point.options.labelContent = gamePoint.absEnergy || '0'
                     point.data = gamePoint
                     points.push point
                 $rootScope.points = points
