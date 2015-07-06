@@ -388,6 +388,7 @@ App.controller 'playCtrl', [
                     point.data = data.gamePoint
 
             $rootScope.socket.on 'user:update', (data) ->
+                console.log data
                 if data.energy then $rootScope.energy = data.energy
                 $rootScope.$apply()
 ]
@@ -556,7 +557,8 @@ App.run [
     '$http'
     'notify'
     '$q'
-    ($rootScope, $state, $window, $http, notify, $q) ->
+    '$timeout'
+    ($rootScope, $state, $window, $http, notify, $q, $timeout) ->
         $rootScope.$state = $state
         $rootScope.$http = $http
 
@@ -600,6 +602,19 @@ App.run [
 
         # Handle websockets
         $rootScope.socket = io wsUrl
+
+        fnTimeout = ->
+            console.log $rootScope.socket.connected
+            if !$rootScope.socket.connected
+                $timeout ->
+                    window.location.reload false
+                , 3000
+            else
+                $rootScope.wsCheck = $timeout fnTimeout, 1000
+
+        $rootScope.wsCheck = $timeout fnTimeout, 1000
+
+
         $rootScope.socket.on 'notification:send', (data) ->
             notify "Hello there "+data
 
