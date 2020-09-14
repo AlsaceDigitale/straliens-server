@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/AlsaceDigitale/straliens-server",
   "dependencies": {
-    "bcrypt": "^0.8.3",
+    "bcrypt": "^5.0.0",
     "better-console": "~0.2.4",
     "body-parser": "^1.12.4",
     "bower": "^1.4.1",
